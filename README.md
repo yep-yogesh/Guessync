@@ -42,3 +42,5 @@ Guessync is a real-time multiplayer music guessing game. Players join rooms, lis
 | Apr 23–25  | Leaderboard, profile, match history       |
 | Apr 26–29  | Testing, UI/UX polish, mobile support     |
 | Apr 30     | Final review and submission               |
+
+<!-- This line is added to force a pull request. -->
