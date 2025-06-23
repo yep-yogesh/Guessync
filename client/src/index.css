@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+@import "tailwindcss";
+
+
+@theme {
+    --font-silkscreen: "Silkscreen", sans-serif; 
+  }

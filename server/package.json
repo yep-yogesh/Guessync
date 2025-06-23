@@ -1,0 +1,38 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fontsource/montserrat": "^5.2.5",
+    "@fontsource/silkscreen": "^5.2.5",
+    "@google/generative-ai": "^0.24.1",
+    "@langchain/core": "^0.3.61",
+    "@langchain/google-genai": "^0.2.13",
+    "axios": "^1.8.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.2.0",
+    "fuse.js": "^7.1.0",
+    "langchain": "^0.3.29",
+    "mongoose": "^8.13.2",
+    "node-cron": "^4.1.1",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.91.1",
+    "razorpay": "^2.9.6",
+    "socket.io": "^4.8.1",
+    "spotify-web-api-node": "^5.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

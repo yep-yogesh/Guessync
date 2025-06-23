@@ -1,0 +1,16 @@
+meta {
+  name: Song-b-index
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:5000/api/song/by-index?roomCode=123486&index=0
+  body: none
+  auth: inherit
+}
+
+params:query {
+  roomCode: 123486
+  index: 0
+}
