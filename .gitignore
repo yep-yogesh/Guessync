@@ -1,0 +1,38 @@
+# ------------------
+# Root-level ignores
+# ------------------
+.DS_Store
+.env
+*.log
+
+# ------------------
+# Client ignores
+# ------------------
+client/node_modules/
+client/dist/
+client/.vite/
+client/.env
+client/.env.local
+client/.DS_Store
+
+# Vite & build cache
+client/.cache/
+client/.parcel-cache/
+client/build/
+client/.eslintcache
+
+# Editor/IDE folders (optional but useful)
+client/.vscode/
+client/.idea/
+
+# ------------------
+# Server ignores
+# ------------------
+server/node_modules/
+server/.env
+server/config/firebase/firebase-adminsdk.json
+server/.DS_Store
+
+# Editor/IDE folders (optional but useful)
+server/.vscode/
+server/.idea/
