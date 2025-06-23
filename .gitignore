@@ -9,6 +9,7 @@
 # Client ignores
 # ------------------
 client/node_modules/
+client/config/firebase.js
 client/dist/
 client/.vite/
 client/.env
