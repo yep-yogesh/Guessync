@@ -1,4 +1,5 @@
 import admin from 'firebase-admin';
+// Same File for Google Authentication too
 import serviceAccount from './firebase-adminsdk.json' assert { type: 'json' };
 
 admin.initializeApp({
