@@ -1,8 +1,23 @@
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/common/Navbar";
 
 const AboutDev = () => {
+  const [displayText, setDisplayText] = useState("");
+  const fullText = "Hey, I'm Yogesh!👋";
 
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < fullText.length) {
+        setDisplayText(fullText.slice(0, i + 1));
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const skills = [
     { name: "Python", icon: "fab fa-python" },
@@ -104,7 +119,7 @@ const AboutDev = () => {
 
         <div className="relative bg-[#0A0A0A] rounded-2xl border-4 border-[#FFFB00] shadow-lg px-10 py-8 w-[650px] min-h-[400px] flex flex-col justify-between">
           <div className="text-left">
-            <h1 className="text-4xl font-bold text-[#FFFB00] mb-2 tracking-wide">Hey, I'm Yogesh!👋</h1>
+            <h1 className="text-4xl font-bold text-[#FFFB00] mb-2 tracking-wide typing-cursor">{displayText}</h1>
 
             <h2 className="text-lg mt-2.5 text-[#ffffff] mb-3 tracking-wider flex items-center gap-1">
               <i className="fas fa-laptop-code mt-1 mr-1 text-[#FFFB00]"></i> Developer of 
@@ -145,7 +160,6 @@ const AboutDev = () => {
                 <i className="fas fa-code"></i>
               </a>
             </div>
-            {/* Payment Link Added For Payment Gateway Integrateion Concept*/}
             <a href="https://buymeacoffee.com/yogeshh" target="_blank" rel="noopener noreferrer"
               className="bg-[#FFFB00] text-black font-bold px-8 py-2 rounded-[8px] hover:bg-black hover:text-[#FFFB00] border-2 border-transparent hover:border-[#FFFB00] transition-all duration-300 text-center">
               Tip the Dev
