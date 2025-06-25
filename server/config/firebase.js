@@ -1,9 +1,4 @@
-import admin from 'firebase-admin';
-import serviceAccount from './firebase-adminsdk.json' assert { type: 'json' };
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+import admin from "../config/firebase.js";
 
 export const verifyFirebaseToken = async (req, res, next) => {
   try {
