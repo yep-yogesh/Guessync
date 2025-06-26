@@ -1,23 +1,26 @@
-import admin from 'firebase-admin';
-import serviceAccount from './firebase-adminsdk.json' assert { type: 'json' };
+import admin from "firebase-admin";
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-export const verifyFirebaseToken = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split('Bearer ')[1];
-
-    if (token === "guest") {
-      req.uid = "guest";
-      return next();
-    }
-
-    const decoded = await admin.auth().verifyIdToken(token);
-    req.uid = decoded.uid;
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
+// 👇 Reconstruct service account from env
+const serviceAccount = {
+  type: "service_account",
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  client_id: process.env.FIREBASE_CLIENT_ID,
+  auth_uri: process.env.FIREBASE_AUTH_URI,
+  token_uri: process.env.FIREBASE_TOKEN_URI,
+  auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_CERT_URL,
+  client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
+  universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
 };
+
+// ✅ Initialize only once
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
+
+// ✅ Export after initialization
+export default admin;

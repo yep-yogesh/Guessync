@@ -55,8 +55,6 @@ settings: {
   }
 };
 
-//Temporarily removed roomcontroller frm main and then created from new branch and commited due to db read and write pushed accidentally with /post endpoint
-
 export const joinRoom = async (req, res) => {
   const { code, uid, name, avatar } = req.body;
 
@@ -85,5 +83,33 @@ export const joinRoom = async (req, res) => {
   } catch (err) {
     console.error("Join Room error:", err);
     res.status(500).json({ message: "Error joining room" });
+  }
+};
+
+export const updateRoom = async (req, res) => {
+  const { code } = req.params;
+  const { rounds, duration, language, rules } = req.body;
+
+  console.log("Updating room:", code);
+
+  try {
+    const room = await Room.findOne({ code });
+
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    if (rounds !== undefined) room.settings.rounds = rounds;
+    if (duration !== undefined) room.settings.duration = duration;
+    if (language !== undefined) room.settings.language = language;
+    if (rules !== undefined) room.rules = rules;
+
+    await room.save();
+    console.log("Room updated successfully");
+
+    res.status(200).json({ message: "Room updated", room });
+  } catch (err) {
+    console.error("Room update error:", err);
+    res.status(500).json({ message: "Error updating room" });
   }
 };
