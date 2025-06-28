@@ -21,6 +21,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
     "firebase-admin": "^13.2.0",
     "fuse.js": "^7.1.0",
     "langchain": "^0.3.29",
