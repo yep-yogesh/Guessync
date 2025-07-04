@@ -45,7 +45,7 @@ export default function JoinRoom() {
         Authorization: `Bearer ${token}`,
       };
 
-      const res = await fetch("http://localhost:5000/api/room/join", {
+      const res = await fetch("https://guessync.onrender.com/api/room/join", {
         method: "POST",
         headers,
         body: JSON.stringify({

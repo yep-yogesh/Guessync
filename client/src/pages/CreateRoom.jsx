@@ -94,7 +94,7 @@ const CreateRoom = () => {
       };
 
       try {
-        const res = await fetch("http://localhost:5000/api/room/create", {
+        const res = await fetch("https://guessync.onrender.com/api/room/create", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
