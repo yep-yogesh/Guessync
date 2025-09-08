@@ -105,10 +105,12 @@ export default function JoinRoom() {
       : "";
   };
 
-  return (
-    <div className="bg-black min-h-screen flex flex-col items-center text-white">
-      <Navbar />
-      <div className="mt-10 bg-[#FFFB00] px-8 py-6 rounded-lg border-4 border-black shadow-[0_0_60px_#FFFB00]">
+return (
+  <div className="bg-black min-h-screen text-white">
+    <Navbar />
+    <div className="flex justify-center items-center mt-15 lg:mt-45 sm:mt-20 md:mt-25 min-h-100vh">
+      {/* The join room card */}
+      <div className="bg-[#FFFB00] px-8 py-6 rounded-lg scale-100 lg:scale-130 sm:scale-90 md:scale-120  border-4 border-black shadow-[0_0_60px_#FFFB00]">
         <div className="relative bg-gray-300 text-black text-2xl px-6 py-6 mb-1 text-center border-4 border-black w-[270px] tracking-widest font-silkscreen min-h-[75px]">
           <div className="mt-6 mb-6 absolute top-1 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap">
             Enter Room Code
@@ -166,5 +168,7 @@ export default function JoinRoom() {
         </p>
       </div>
     </div>
-  );
+  </div>
+);
+
 }

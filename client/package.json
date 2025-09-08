@@ -19,6 +19,7 @@
     "colorthief": "^2.6.0",
     "firebase": "^11.6.0",
     "framer-motion": "^12.9.2",
+    "lucide-react": "^0.542.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
