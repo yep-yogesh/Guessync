@@ -8,12 +8,16 @@ export default function Navbar() {
 
   return (
     <nav className="w-full flex items-center justify-between px-6 py-4 bg-black text-white font-montserrat">
-      <div className="flex items-center">
-        <img src="/logo.png" alt="logo" className="w-10 h-10 mt-1.5" />
-        <h1 className="text-2xl font-silkscreen text-white">
-          GUES<span className="text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]">SYNC</span>
-        </h1>
-      </div>
+    <div
+      className="flex items-center cursor-pointer"
+      onClick={() => navigate("/")}
+    >
+      <img src="/logo.png" alt="logo" className="w-10 h-10 mt-1.5" />
+      <h1 className="text-2xl font-silkscreen text-white">
+        GUES
+        <span className="text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]">SYNC</span>
+      </h1>
+    </div>
 
       <div className="flex items-center gap-8 text-lg font-medium">
         <button
