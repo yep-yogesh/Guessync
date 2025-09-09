@@ -40,7 +40,7 @@ const AvatarGrid = ({ selected, onSelect }) => {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 justify-items-center w-full max-w-2xl">
       {Array.from({ length: avatarCount }).map((_, i) => {
         const isSelected = selected === `/avatars/${i + 1}.png`;
         const isHighlighted = highlighted === i;
@@ -48,10 +48,10 @@ const AvatarGrid = ({ selected, onSelect }) => {
           <div
             key={i}
             onClick={() => handleSelect(i)}
-            className={`w-24 h-24 rounded-xl overflow-hidden flex items-center justify-center cursor-pointer transition-all duration-200
+            className={`w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-xl overflow-hidden flex items-center justify-center cursor-pointer transition-all duration-200
               ${isSelected || isHighlighted
                 ? "border-4 border-[#FFFB00] bg-[#FFFB00]/20 opacity-100 shadow-[0_0_15px_#FFFB00]"
-                : "opacity-30 border-2 border-gray-600"}
+                : "opacity-40 border-2 border-gray-600"}
               hover:opacity-100 hover:shadow-[0_0_10px_#FFFB00]`}
           >
             <img
@@ -63,11 +63,12 @@ const AvatarGrid = ({ selected, onSelect }) => {
         );
       })}
 
+      {/* Dice Button */}
       <div
         onClick={randomize}
-        className="w-24 h-24 rounded-xl flex items-center justify-center bg-black border-2 border-white cursor-pointer hover:shadow-[0_0_10px_white]"
+        className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-xl flex items-center justify-center bg-black border-2 border-white cursor-pointer hover:shadow-[0_0_10px_white] transition-all"
       >
-        <img src="/dice.png" alt="Random" className="mb-1 mr-1 w-15 h-12" />
+        <img src="/dice.png" alt="Random" className="w-10 sm:w-12 md:w-14" />
       </div>
     </div>
   );
