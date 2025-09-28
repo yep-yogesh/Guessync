@@ -2,7 +2,11 @@
   <img src="./client/src/assets/guessync.gif" alt="Guessync Demo" width="1000" />
 </p>
 
-<h1 align="center">Guessync</h1>
+<h1 align="center">
+  <a href="https://guessync.netlify.app/" style="color: yellow; text-decoration: none;">
+    Guessync
+  </a>
+</h1>
 
 <p align="center">
   <b>A full-stack real-time multiplayer music guessing game</b> <br/>
