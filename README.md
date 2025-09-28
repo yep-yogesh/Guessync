@@ -3,8 +3,8 @@
 </p>
 
 <h1 align="center">
-  <a href="https://guessync.netlify.app/" style="color: yellow; text-decoration: none;">
-    Guessync
+  <a href="https://guessync.netlify.app/">
+    <img src="./client/public/wordmark.png" alt="Guessync" height="80" />
   </a>
 </h1>
 
@@ -57,4 +57,4 @@
 
 - **Frontend:** [Guessync on Netlify](https://guessync.netlify.app/)  
 - **Backend:** [Render](https://guessync.onrender.com/)  
-- **Database:** MongoDB Atlas  
+- **Database:** MongoDB Atlas
