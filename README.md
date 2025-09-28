@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./client/src/assets/guessync.gif" alt="Guessync Demo" width="600" />
+  <img src="./client/src/assets/guessync.gif" alt="Guessync Demo" width="1000" />
 </p>
 
 <h1 align="center">Guessync</h1>
