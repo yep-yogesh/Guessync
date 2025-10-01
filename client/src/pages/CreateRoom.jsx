@@ -1,12 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/common/Navbar";
-import { useSocket } from "../contexts/SocketContext";
-import spotcon from "/spotify.png";
+import { useNavigate } from "react-router-dom";
+import socket from "../socket";
+import sendIcon from "../assets/send.png";
+import spotcon from "../assets/spotify.png";
+
+
+const DEFAULT_PLAYLISTS = {
+  Tamil: "316WvxScpeCbfvWVrTHfPa",
+  Hindi: "4stlIpoPS7uKCsmUA7D8KZ",
+  English: "2clGinIH6s1bj2TclAgKzW",
+  Malayalam: "5tU4P1GOBDBs9nwfok79yD",
+  Telugu: "1llHjtjECBo12ChwOGe38L",
+  Kannada: "6utix5lfPoZkBirWlRujqa"
+};
 
 const CreateRoom = () => {
-  const [roomCode] = useState(() => Math.floor(100000 + Math.random() * 900000));
-  const [players, setPlayers] = useState(6);
+  const [roomCode, setRoomCode] = useState("");
+  const [players, setPlayers] = useState(1);
   const [rounds, setRounds] = useState(1);
   const [duration, setDuration] = useState(30);
   const [spotifyInputVisible, setSpotifyInputVisible] = useState(false);
@@ -32,45 +43,41 @@ const CreateRoom = () => {
   window.addEventListener("resize", handleResize);
 
   return () => {
-    document.body.style.overflow = "auto"; // clean up
+    document.body.style.overflow = "auto"; // cleanup
     window.removeEventListener("resize", handleResize);
   };
 }, []);
 
-  const { socket } = useSocket();
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const code = Math.floor(100000 + Math.random() * 900000);
+    setRoomCode(code);
+  }, []);
 
-  if (!user || !token) {
-    navigate("/login");
-    return null;
-  }
-
-  const confirmSpotify = () => {
-    if (spotifyValue.trim() === "") {
-      alert("Please enter a Spotify playlist URL.");
-      return;
-    }
-    if (!spotifyValue.includes("open.spotify.com/playlist/")) {
-      alert("❌ Invalid Spotify Playlist URL");
-      return;
-    }
-    setSpotifyConfirmed(true);
-    setSpotifyInputVisible(false);
+  const toggleLanguage = (lang) => {
+    setSelectedLanguage((prev) => (prev === lang ? "" : lang));
   };
 
   const handleCreateRoom = async () => {
-    if (!selectedLanguage && !spotifyConfirmed) {
-      alert("Please select a language or add a Spotify playlist.");
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!token || !user) {
+      alert("Please log in first!");
       return;
     }
 
+    socket.auth = { uid: user.uid };
+    socket.connect();
+
+    let playlistId = null;
     let useSpotify = false;
-    let playlistId = "";
     let rulesText = "";
 
-    if (spotifyConfirmed) {
+    if (selectedLanguage && DEFAULT_PLAYLISTS[selectedLanguage]) {
+      playlistId = DEFAULT_PLAYLISTS[selectedLanguage];
+      useSpotify = true;
+    } else if (spotifyConfirmed && spotifyValue.trim()) {
       playlistId = spotifyValue.split("playlist/")[1]?.split("?")[0];
       if (!playlistId) {
         alert("❌ Invalid Spotify Playlist URL");
@@ -143,16 +150,19 @@ return (
   <div className="flex-1 flex flex-col items-center px-4 py-6 sm:px-6 md:px-8 lg:justify-center lg:scale-125">
 
       {/* Title */}
-      <h1 className="text-white font-black text-3xl sm:text-4xl md:text-5xl mb-6 sm:mb-8 drop-shadow-[0_0_5px_#111] text-center">
-        NEW ROOM
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 drop-shadow-[0_0_5px_#111] mt-6 sm:mt-10 text-center">
+        Create A New Room
       </h1>
 
-      {/* Room Code Display */}
-      <div className="mb-6 sm:mb-8 text-center">
-        <div className="relative inline-flex items-center gap-3 sm:gap-4">
-          <div className="bg-[#111] border-[2px] border-[#FFFB00] px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-silkscreen text-lg sm:text-xl md:text-2xl text-[#FFFB00] shadow-[0_0_8px_#FFFB00]">
+      {/* Room Code Section */}
+      <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5 relative justify-center">
+        <span className="font-silkscreen text-xl sm:text-xl md:text-2xl tracking-widest drop-shadow-[0_0_5px_#fff]">
+          ROOM CODE:
+        </span>
+        <div className="flex items-center gap-2 sm:gap-3 relative">
+          <span className="font-silkscreen text-2xl sm:text-xl md:text-2xl text-[#FFFB00] tracking-wider sm:tracking-[10.2px] drop-shadow-[0_0_5px_#FFFB00]">
             {roomCode}
-          </div>
+          </span>
           <img
             src="/copy.png"
             alt="copy"
@@ -206,16 +216,16 @@ return (
             <label className="w-full sm:w-[255px] font-silkscreen text-base sm:text-[1.275rem] whitespace-nowrap drop-shadow-[0_0_5px_#fff] text-center sm:text-left">
               {ctrl.label}
             </label>
-            <div className="flex items-center gap-3 sm:gap-6">
+            <div className="flex items-center gap-3 sm:gap-5">
               <button
                 className="bg-[#FFFB00] w-10 h-10 sm:w-[51px] sm:h-[51px] font-silkscreen rounded-lg text-black text-xl sm:text-[1.53rem] drop-shadow-[0_0_7px_#FFFB00]"
                 onClick={() => ctrl.set(Math.max(1, ctrl.value - 1))}
                 >
                 -
               </button>
-              <div className="text-white font-silkscreen text-lg sm:text-[1.275rem] bg-[#111] border-[2px] border-[#FFFB00] px-3 py-2 sm:px-4 sm:py-3 rounded-lg w-16 sm:w-20 text-center">
+              <span className="bg-white w-10 h-10 sm:w-[51px] sm:h-[51px] text-black rounded-lg font-silkscreen text-xl sm:text-[1.53rem] drop-shadow-[0_0_7px_#fff] flex justify-center items-center">
                 {ctrl.value}
-              </div>
+              </span>
               <button
                 className="bg-[#FFFB00] w-10 h-10 sm:w-[51px] sm:h-[51px] font-silkscreen rounded-lg text-black text-xl sm:text-[1.53rem] drop-shadow-[0_0_7px_#FFFB00]"
                 onClick={() =>
@@ -281,41 +291,34 @@ return (
                   value={spotifyValue}
                   onChange={(e) => setSpotifyValue(e.target.value)}
                   />
-                <button
-                  className="ml-2 px-3 py-1 bg-[#1ED760] text-black font-silkscreen text-xs md:text-sm rounded hover:bg-[#1db854] transition"
-                  onClick={confirmSpotify}
-                  >
-                  ✓
-                </button>
+                <img
+                  src={sendIcon}
+                  alt="send"
+                  className="w-4 h-4 md:w-5 md:h-5 cursor-pointer"
+                  onClick={() => {
+                    if (spotifyValue.trim()) setSpotifyConfirmed(true);
+                  }}
+                  />
               </div>
             )}
           </div>
         )}
-      </div>
 
-      {/* Show Upload Rules button on smaller screens */}
-      <div className="lg:hidden mb-6 sm:mb-8">
-        <button
-          onClick={() => setShowRulesModal(true)}
-          className={`duration-btn font-silkscreen px-6 py-3 rounded-lg border-[3px] text-base transition ${
-            rulesFile
-            ? "border-[#FFFB00] text-[#FFFB00] bg-[#FFFB00]/20 shadow-[0_0_15px_#FFFB00]"
-            : "border-gray-600 text-gray-500 bg-gray-500/20 hover:border-[#FFFB00] hover:text-[#FFFB00] hover:bg-[#FFFB00]/10 hover:shadow-[0_0_15px_#111]"
-          }`}
+        {selectedLanguage && (
+          <div className="text-[#FFFB00] font-silkscreen text-base md:text-xl text-center">
+            Using {selectedLanguage} playlist
+          </div>
+        )}
+
+        {showCreateBtn && (
+          <button
+          onClick={handleCreateRoom}
+          className="bg-[#FFFB00] text-black font-silkscreen px-6 py-3 rounded-lg text-base md:text-xl drop-shadow-[0_0_7px_#FFFB00] hover:drop-shadow-[0_0_10px_#FFFB00] w-full md:w-[240px] md:h-[56px]"
           >
-          {rulesFile ? "UPLOADED RULES" : "UPLOAD RULES"}
-        </button>
+            CREATE ROOM
+          </button>
+        )}
       </div>
-
-      {/* Create Room Button */}
-      {showCreateBtn && (
-        <button
-        onClick={handleCreateRoom}
-        className="font-silkscreen bg-[#FFFB00] text-black px-8 py-4 rounded-lg text-lg sm:text-xl md:text-2xl drop-shadow-[0_0_10px_#FFFB00] hover:drop-shadow-[0_0_15px_#FFFB00] hover:scale-105 transition"
-        >
-          CREATE ROOM
-        </button>
-      )}
 
       {/* Language Selection Modal */}
       {showModal && (
@@ -330,14 +333,17 @@ return (
             <h2 className="text-white font-black text-xl sm:text-2xl md:text-3xl mb-4">
               Pick Language
             </h2>
-            <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-6">
-              {["English", "Hindi", "Tamil", "Telugu"].map((lang) => (
+            <p className="font-silkscreen text-[#FFFB00] text-base sm:text-lg md:text-xl mb-4 sm:mb-6">
+              Select one language
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+              {Object.keys(DEFAULT_PLAYLISTS).map((lang) => (
                 <button
                 key={lang}
-                onClick={() => setSelectedLanguage(lang)}
-                className={`font-silkscreen px-4 py-2 sm:px-6 sm:py-3 rounded-lg text-sm sm:text-base transition ${
+                onClick={() => toggleLanguage(lang)}
+                className={`py-2 px-3 sm:py-3 sm:px-4 rounded-lg font-silkscreen text-base sm:text-[1.1rem] border-[3px] transition ${
                   selectedLanguage === lang
-                  ? "bg-[#FFFB00] text-black drop-shadow-[0_0_7px_#FFFB00]"
+                  ? "text-[#FFFB00] border-[#FFFB00] bg-[#FFFB00]/5 drop-shadow-[0_0_7px_#FFFB00]"
                   : "text-gray-500 bg-gray-500/20 border-gray-500 hover:border-[#FFFB00] hover:text-[#FFFB00] hover:drop-shadow-[0_0_7px_#111]"
                 }`}
                 >
