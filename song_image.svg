@@ -1,0 +1,54 @@
+Ways to Convert Image to SVG
+
+A. Automatic Conversion (Raster → Vector)
+
+1. Use online tools like:
+
+Vectorizer
+
+SVG Creator by Photopea (Free editor)
+
+Convertio
+
+
+
+2. Steps:
+
+Upload your image (PNG/JPG)
+
+The tool traces the image into paths
+
+Download the generated .svg
+
+
+
+
+B. Using Adobe Illustrator / Inkscape
+
+Inkscape (free & open-source):
+
+1. Open the image in Inkscape.
+
+
+2. Select the image → Path → Trace Bitmap.
+
+
+3. Adjust settings (brightness cutoff, edge detection).
+
+
+4. Save as .svg.
+
+
+
+Adobe Illustrator:
+
+1. Open image → Image Trace → Expand.
+
+
+2. Export → Save As → .svg.
+
+
+
+
+
+---
