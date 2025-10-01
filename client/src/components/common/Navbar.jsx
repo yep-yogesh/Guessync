@@ -34,7 +34,7 @@ export default function Navbar() {
             <button
               key={item.label}
               onClick={() => navigate(item.path)}
-              className="relative z-10 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300"
+              className="relative z-10 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300 cursor-pointer"
             >
               {item.label}
             </button>
@@ -68,11 +68,10 @@ export default function Navbar() {
 
       {/* Mobile Dropdown */}
       <div
-        className={`md:hidden flex flex-col items-center bg-black text-lg font-medium gap-6 py-6 transform transition-all duration-500 ease-in-out relative z-40 ${
-          menuOpen
+        className={`md:hidden flex flex-col items-center bg-black text-lg font-medium gap-6 py-6 transform transition-all duration-500 ease-in-out relative z-40 ${menuOpen
             ? "max-h-[500px] opacity-100 scale-100"
             : "max-h-0 opacity-0 scale-95 overflow-hidden"
-        }`}
+          }`}
       >
         {navItems.map((item) => (
           <button
