@@ -1,13 +1,14 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyDll6UocV7F6zd-4Ny5gJPLpOfc_8S_h_U",
+  authDomain: "violetnotes.firebaseapp.com",
+  projectId: "violetnotes",
+  storageBucket: "violetnotes.firebasestorage.app",
+  messagingSenderId: "359356453593",
+  appId: "1:359356453593:web:bffb464c78af9b8e23a4c8"
 };
 
 const app = initializeApp(firebaseConfig);
