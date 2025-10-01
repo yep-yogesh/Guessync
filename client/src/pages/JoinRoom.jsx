@@ -108,28 +108,28 @@ export default function JoinRoom() {
 return (
   <div className="bg-black min-h-screen text-white">
     <Navbar />
-    <div className="flex justify-center items-center mt-15 lg:mt-45 sm:mt-20 md:mt-25 min-h-100vh">
+    <div className="flex justify-center items-center px-4 py-8 min-h-[calc(100vh-80px)]">
       {/* The join room card */}
-      <div className="bg-[#FFFB00] px-8 py-6 rounded-lg scale-100 lg:scale-130 sm:scale-90 md:scale-120  border-4 border-black shadow-[0_0_60px_#FFFB00]">
-        <div className="relative bg-gray-300 text-black text-2xl px-6 py-6 mb-1 text-center border-4 border-black w-[270px] tracking-widest font-silkscreen min-h-[75px]">
-          <div className="mt-6 mb-6 absolute top-1 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap">
+      <div className="bg-[#FFFB00] p-4 sm:p-6 md:p-8 rounded-lg border-4 border-black shadow-[0_0_40px_#FFFB00] sm:shadow-[0_0_60px_#FFFB00] max-w-sm w-full">
+        <div className="relative bg-gray-300 text-black text-lg sm:text-xl md:text-2xl px-4 sm:px-6 py-4 sm:py-6 mb-4 text-center border-4 border-black tracking-widest font-silkscreen min-h-[60px] sm:min-h-[75px]">
+          <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap">
             Enter Room Code
           </div>
-          <div className="mt-6">{code.padEnd(6, "_").split("").join(" ")}</div>
+          <div className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg">{code.padEnd(6, "_").split("").join(" ")}</div>
           {error && (
-            <div className="text-red-600 text-[8px] text-center mt-3">{error}</div>
+            <div className="text-red-600 text-xs text-center mt-2">{error}</div>
           )}
         </div>
 
-        <div className="grid grid-cols-3 gap-2 mb-2">
+        <div className="grid grid-cols-3 gap-2 mb-4">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
             <button
               key={digit}
               ref={(el) => (buttonRefs.current[digit] = el)}
               onClick={() => handleDigit(digit.toString())}
-              className={`bg-gray-200 text-black text-xl font-silkscreen py-5 px-0 border-4 border-black shadow-[4px_4px_0_#000] hover:bg-gray-300 transition-all duration-150 ${getButtonActiveClass(
+              className={`bg-gray-200 text-black text-base sm:text-lg md:text-xl font-silkscreen py-3 sm:py-4 md:py-5 px-2 border-4 border-black shadow-[4px_4px_0_#000] hover:bg-gray-300 transition-all duration-150 ${getButtonActiveClass(
                 digit
-              )} w-[80px]`}
+              )} aspect-square`}
             >
               {digit}
             </button>
@@ -138,9 +138,9 @@ return (
           <button
             ref={(el) => (buttonRefs.current["0"] = el)}
             onClick={() => handleDigit("0")}
-            className={`bg-gray-200 text-black text-xl py-5 px-0 border-4 border-black font-silkscreen shadow-[4px_4px_0_#000] hover:bg-gray-300 transition-all duration-150 ${getButtonActiveClass(
+            className={`bg-gray-200 text-black text-base sm:text-lg md:text-xl py-3 sm:py-4 md:py-5 px-2 border-4 border-black font-silkscreen shadow-[4px_4px_0_#000] hover:bg-gray-300 transition-all duration-150 ${getButtonActiveClass(
               "0"
-            )} w-[80px]`}
+            )} aspect-square`}
           >
             0
           </button>
@@ -148,7 +148,7 @@ return (
           <button
             ref={(el) => (buttonRefs.current["join"] = el)}
             onClick={handleJoin}
-            className={`w-[177px] col-span-2 bg-black text-white text-lg py-0 font-silkscreen border-4 border-black shadow-[4px_4px_0_#000] hover:bg-gray-200 hover:cursor-pointer hover:text-black transition-all duration-150 ${getButtonActiveClass(
+            className={`col-span-2 bg-black text-white text-sm sm:text-base md:text-lg py-3 sm:py-4 md:py-5 font-silkscreen border-4 border-black shadow-[4px_4px_0_#000] hover:bg-gray-200 hover:cursor-pointer hover:text-black transition-all duration-150 ${getButtonActiveClass(
               "join"
             )}`}
           >
@@ -156,7 +156,7 @@ return (
           </button>
         </div>
 
-        <p className="mt-4 text-black text-sm text-center">
+        <p className="mt-4 text-black text-xs sm:text-sm text-center">
           No Code?{" "}
           <span
             onClick={() => navigate("/create-room")}
