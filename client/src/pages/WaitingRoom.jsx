@@ -71,16 +71,25 @@ const WaitingRoom = () => {
       {/* Players Section */}
       <div className="w-full lg:w-[22%] bg-[#1a1a1ab8] rounded-xl p-3 sm:p-4 lg:p-5 flex flex-col order-1 lg:order-none h-[30%] lg:h-full">
         <div className="flex-1">
-          <h2 className="text-white text-base sm:text-lg lg:text-xl mb-2">Players ({players.length})</h2>
+          <h2 className="text-white text-base sm:text-lg lg:text-xl mb-2">
+            Players ({players.length})
+          </h2>
           <ul className="space-y-1 sm:space-y-2 lg:space-y-3 max-h-[80%] lg:max-h-none overflow-y-auto custom-scrollbar">
             {players.map((p) => (
-              <li key={p.uid} className="flex items-center gap-2 bg-[#2d2d2d58] p-2 rounded-lg">
+              <li
+                key={p.uid}
+                className="flex items-center gap-2 bg-[#2d2d2d58] p-2 rounded-lg"
+              >
                 <img
-                  src={`/avatars/${p.avatar || 1}.png`}
+                  src={p.avatar}
                   alt={p.name}
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 rounded-sm"
                 />
-                <span className={`text-xs sm:text-sm lg:text-base ${p.uid === currentUID ? "text-yellow-400" : ""}`}>
+                <span
+                  className={`text-xs sm:text-sm lg:text-base ${
+                    p.uid === currentUID ? "text-yellow-400" : ""
+                  }`}
+                >
                   {p.name} {p.uid === hostUID && "👑"}
                 </span>
               </li>
@@ -100,9 +109,14 @@ const WaitingRoom = () => {
 
       {/* Main Waiting Room Section */}
       <div className="w-full lg:w-[56%] bg-[#1a1a1ab8] rounded-xl flex flex-col items-center justify-center order-2 lg:order-none h-[40%] lg:h-full">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 sm:mb-4 text-center">Waiting Room</h1>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 sm:mb-4 text-center">
+          Waiting Room
+        </h1>
         <p className="text-gray-300 text-sm sm:text-base lg:text-lg mb-2 text-center px-4">
-          Room Code: <span className="text-white font-mono text-base sm:text-lg lg:text-xl">{roomCode}</span>
+          Room Code:{" "}
+          <span className="text-white font-mono text-base sm:text-lg lg:text-xl">
+            {roomCode}
+          </span>
         </p>
         {!isHost && (
           <p className="mt-3 sm:mt-4 lg:mt-6 text-yellow-400 text-center text-sm sm:text-base lg:text-lg px-4">
@@ -113,9 +127,13 @@ const WaitingRoom = () => {
 
       {/* Chat Section */}
       <div className="w-full lg:w-[22%] bg-[#1a1a1ab8] rounded-xl p-3 sm:p-4 lg:p-5 flex flex-col order-3 lg:order-none h-[30%] lg:h-full">
-        <h2 className="text-white text-base sm:text-lg lg:text-xl mb-2 sm:mb-3">Chat</h2>
+        <h2 className="text-white text-base sm:text-lg lg:text-xl mb-2 sm:mb-3">
+          Chat
+        </h2>
         <div className="flex-1 bg-[#2d2d2d58] rounded-lg p-2 sm:p-2 lg:p-3 overflow-y-auto">
-          <p className="text-gray-400 italic text-xs sm:text-xs lg:text-sm">System: Waiting for game to start...</p>
+          <p className="text-gray-400 italic text-xs sm:text-xs lg:text-sm">
+            System: Waiting for game to start...
+          </p>
         </div>
       </div>
     </div>
