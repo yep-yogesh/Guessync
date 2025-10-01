@@ -210,3 +210,8 @@ Frontend (client/package.json):
 4) Open a PR with a brief description and screenshots if relevant
 
 Thanks for contributing!
+
+## Contributors ✨
+
+![Contributors Hall of Fame](https://github.aryansinghnegi.dev/?repo=yep-yogesh/Guessync)
+
