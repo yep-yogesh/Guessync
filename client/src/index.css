@@ -1,16 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
-@import "tailwindcss";
-
+@import 'tailwindcss';
 
 @theme {
-    --font-silkscreen: "Silkscreen", sans-serif; 
-  }
+  --font-silkscreen: 'Silkscreen', sans-serif;
+}
+
+* {
+  @apply focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-dotted focus-visible:outline-[#fbbf24];
+}
 
 /* Custom Scrollbar Styles */
 .custom-scrollbar {
   /* Webkit browsers */
   scrollbar-width: thin;
-  scrollbar-color: #FBBF24 #374151;
+  scrollbar-color: #fbbf24 #374151;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -23,11 +26,11 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #FBBF24;
+  background: #fbbf24;
   border-radius: 10px;
   border: 1px solid #374151;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #F59E0B;
+  background: #f59e0b;
 }
