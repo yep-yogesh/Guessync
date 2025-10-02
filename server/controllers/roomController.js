@@ -77,14 +77,6 @@ export const joinRoom = async (req, res) => {
     room.players.push({ uid, name, avatar });
     await room.save();
 
-    
-    const io = req.app.get('socketio');
-    if (io) {
-      io.to(code).emit("player-joined-room", {
-        message: `${name} has joined the room.`,
-        player: { uid, name, avatar },
-      });
-    }
     console.log("Player added to room and saved.");
     res.json({ message: "Joined room", room });
   } catch (err) {
