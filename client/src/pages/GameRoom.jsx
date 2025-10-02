@@ -127,7 +127,11 @@ const GameRoom = () => {
     };
 
     const updateColors = () => {
+      if (!currentColorsRef.current || !targetColorsRef.current) return;
+      
       for (let i = 0; i < currentColorsRef.current.length; i++) {
+        if (!currentColorsRef.current[i] || !targetColorsRef.current[i]) continue;
+        
         for (let j = 0; j < 3; j++) {
           currentColorsRef.current[i][j] +=
             (targetColorsRef.current[i][j] - currentColorsRef.current[i][j]) *
