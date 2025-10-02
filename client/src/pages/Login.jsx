@@ -181,7 +181,9 @@ const Login = () => {
           <AvatarGrid
             selected={selectedAvatar}
             onSelect={(avatar) => {
-              setSelectedAvatar(avatar);
+              if (selectedAvatar) setSelectedAvatar(null);
+              else setSelectedAvatar(avatar);
+
               setErrors((prev) => ({ ...prev, avatar: null }));
             }}
           />
