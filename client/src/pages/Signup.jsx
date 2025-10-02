@@ -163,7 +163,7 @@ const Signup = () => {
           )}
 
           <button
-            className="bg-black text-white w-full py-2 rounded mb-3 font-silkscreen hover:scale-105 transition"
+            className="bg-black cursor-pointer text-white w-full py-2 rounded mb-3 font-silkscreen hover:scale-105 transition"
             onClick={handleEmailSignup}
           >
             SIGN-UP!
@@ -189,7 +189,7 @@ const Signup = () => {
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleGoogleSignup}
-              className="flex-1 flex justify-center items-center gap-3 bg-white text-black px-4 py-3 rounded text-sm sm:text-base font-silkscreen border-2 border-transparent hover:border-black transition-all duration-200"
+              className="flex-1 cursor-pointer flex justify-center items-center gap-3 bg-white text-black px-4 py-3 rounded text-sm sm:text-base font-silkscreen border-2 border-transparent hover:border-black transition-all duration-200"
             >
               <img src={googleIcon} alt="G" className="w-5 h-5" />
               Sign Up With Google

@@ -620,7 +620,7 @@ if (gameOver) {
 <div className="absolute inset-0 flex items-center justify-center z-20">
   <button
     onClick={handlePlayFirstSong}
-    className="mt-[40px] bg-[#FFFB00] hover:bg-[#FFFB00CC] text-black px-4 py-2 rounded-md text-[10px] font-bold shadow-[0_0_10px_3px_rgba(255,251,0,0.4)] transition-all"
+    className="mt-[40px] cursor-pointer bg-[#FFFB00] hover:bg-[#FFFB00CC] text-black px-4 py-2 rounded-md text-[10px] font-bold shadow-[0_0_10px_3px_rgba(255,251,0,0.4)] transition-all"
   >
     PLAY SONG
   </button>
