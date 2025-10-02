@@ -91,17 +91,6 @@ const CreateRoom = () => {
       useSpotify = true;
     }
 
-    if (rulesFile) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        rulesText = e.target.result;
-        await sendRequest();
-      };
-      reader.readAsText(rulesFile);
-    } else {
-      await sendRequest();
-    }
-
     async function sendRequest() {
       const payload = {
         uid: user.uid,
