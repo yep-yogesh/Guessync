@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // hamburger + close icons
 import avatar from "/avatars/1.png";
 
@@ -19,13 +19,18 @@ export default function Navbar() {
       <div className="flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <div className="flex items-center">
-          <img src="/logo.png" alt="logo" className="w-10 h-10 mt-1.5" />
-          <h1 className="ml-2 text-2xl font-silkscreen">
-            GUES
-            <span className="text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]">
-              SYNC
-            </span>
-          </h1>
+          <Link to="/landing" className="flex items-center">
+            <img src="/logo.png" alt="logo" className="w-10 h-10 mt-1.5" />
+          </Link>
+
+          <Link to="/landing" className="flex items-center">
+            <h1 className="ml-2 text-2xl font-silkscreen">
+              GUES
+              <span className="text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]">
+                SYNC
+              </span>
+            </h1>
+          </Link>
         </div>
 
         {/* Desktop Menu */}
