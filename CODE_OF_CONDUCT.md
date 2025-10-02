@@ -1,3 +1,4 @@
+
 # 📜 Contributor Code of Conduct
 
 Welcome to **Guessync**! 🎶  
