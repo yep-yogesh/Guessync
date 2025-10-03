@@ -20,6 +20,15 @@ const HomePage = () => {
   const [movingBlobs, setMovingBlobs] = useState([]);
   const containerRef = useRef(null);
 
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    if (token && user) {
+      navigate("/landing", { replace: true });
+    }
+  }, [navigate]);
+
   const getRandomChar = () => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
     return chars.charAt(Math.floor(Math.random() * chars.length));
