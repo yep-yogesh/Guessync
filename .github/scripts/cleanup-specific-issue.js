@@ -17,8 +17,8 @@ async function deleteIssueVectors() {
 
   if (!ISSUE_TO_DELETE) {
     console.error("❌ Please provide an issue number:");
-    console.error("   Usage: ISSUE_NUMBER=6 node scripts/cleanup-specific-issue.js");
-    console.error("   Or:    node scripts/cleanup-specific-issue.js 6");
+    console.error("   Usage: ISSUE_NUMBER=6 node .github/scripts/cleanup-specific-issue.js");
+    console.error("   Or:    node .github/scripts/cleanup-specific-issue.js 6");
     process.exit(1);
   }
 
@@ -124,8 +124,8 @@ const args = process.argv.slice(2);
 if (args.includes('--help') || args.includes('-h')) {
   console.log(`
 📖 Usage: 
-  ISSUE_NUMBER=6 node scripts/cleanup-specific-issue.js
-  node scripts/cleanup-specific-issue.js 6
+  ISSUE_NUMBER=6 node .github/scripts/cleanup-specific-issue.js
+  node .github/scripts/cleanup-specific-issue.js 6
 
 🔧 Required Environment Variables:
   - PINECONE_API_KEY: Pinecone API key

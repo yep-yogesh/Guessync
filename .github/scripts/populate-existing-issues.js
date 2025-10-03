@@ -322,7 +322,7 @@ async function populateExistingIssues() {
 const args = process.argv.slice(2);
 if (args.includes('--help') || args.includes('-h')) {
   console.log(`
-📖 Usage: node scripts/populate-existing-issues.js
+📖 Usage: node .github/scripts/populate-existing-issues.js
 
 🔧 Required Environment Variables:
   - GITHUB_TOKEN: GitHub personal access token

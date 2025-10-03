@@ -153,7 +153,7 @@ async function cleanupDuplicates() {
 const args = process.argv.slice(2);
 if (args.includes('--help') || args.includes('-h')) {
   console.log(`
-📖 Usage: node scripts/cleanup-duplicates.js
+📖 Usage: node .github/scripts/cleanup-duplicates.js
 
 🔧 Required Environment Variables:
   - PINECONE_API_KEY: Pinecone API key
@@ -182,8 +182,8 @@ if (!args.includes('--force')) {
 
 🚨 This action cannot be undone!
 
-To proceed, run: node scripts/cleanup-duplicates.js --force
-To see help: node scripts/cleanup-duplicates.js --help
+To proceed, run: node .github/scripts/cleanup-duplicates.js --force
+To see help: node .github/scripts/cleanup-duplicates.js --help
   `);
   process.exit(0);
 }

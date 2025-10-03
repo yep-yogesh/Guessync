@@ -130,7 +130,7 @@ const service = args[0];
 
 if (args.includes('--help') || args.includes('-h')) {
   console.log(`
-📖 Usage: node scripts/validate-apis.js [service]
+📖 Usage: node .github/scripts/validate-apis.js [service]
 
 🔧 Available Services:
   pinecone  - Test Pinecone vector database connection
@@ -146,9 +146,9 @@ if (args.includes('--help') || args.includes('-h')) {
   - GITHUB_REPOSITORY: Repository in format "owner/repo" (optional)
 
 📝 Examples:
-  node scripts/validate-apis.js          # Test all connections
-  node scripts/validate-apis.js pinecone # Test only Pinecone
-  node scripts/validate-apis.js gemini   # Test only Gemini
+  node .github/scripts/validate-apis.js          # Test all connections
+  node .github/scripts/validate-apis.js pinecone # Test only Pinecone
+  node .github/scripts/validate-apis.js gemini   # Test only Gemini
   `);
   process.exit(0);
 }

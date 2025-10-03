@@ -123,7 +123,7 @@ const args = process.argv.slice(2);
 
 if (args.includes('--help') || args.includes('-h')) {
   console.log(`
-📖 Usage: node scripts/clear-all-vectors.js --force
+📖 Usage: node .github/scripts/clear-all-vectors.js --force
 
 🔧 Required Environment Variables:
   - PINECONE_API_KEY: Pinecone API key
@@ -155,12 +155,12 @@ if (!args.includes('--force')) {
 🚨 THIS ACTION CANNOT BE UNDONE!
 
 🛡️  For safety, this script requires the --force flag:
-     node scripts/clear-all-vectors.js --force
+     node .github/scripts/clear-all-vectors.js --force
 
 💡 Alternative: Use the cleanup script to remove only duplicates:
-     node scripts/cleanup-duplicates.js --force
+     node .github/scripts/cleanup-duplicates.js --force
 
-📖 For help: node scripts/clear-all-vectors.js --help
+📖 For help: node .github/scripts/clear-all-vectors.js --help
   `);
   process.exit(0);
 }

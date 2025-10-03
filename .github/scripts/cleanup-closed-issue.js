@@ -245,7 +245,7 @@ async function cleanupClosedIssue() {
 const args = process.argv.slice(2);
 if (args.includes("--help") || args.includes("-h")) {
   console.log(`
-📖 Usage: node scripts/cleanup-closed-issue.js
+📖 Usage: node .github/scripts/cleanup-closed-issue.js
 
 🔧 Required Environment Variables:
   - GITHUB_TOKEN: GitHub personal access token
