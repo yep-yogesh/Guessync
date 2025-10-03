@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // hamburger + close icons
+import { useNavigate, useLocation } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 import avatar from "/avatars/1.png";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navItems = [
@@ -13,6 +14,8 @@ export default function Navbar() {
     { label: "About Dev", path: "/about" },
     { label: "How to Play", path: "/how-to-play" },
   ];
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav className="w-full bg-black text-white font-montserrat shadow-md relative z-50">
@@ -34,9 +37,16 @@ export default function Navbar() {
             <button
               key={item.label}
               onClick={() => navigate(item.path)}
-              className="relative z-10 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300"
+              className={`relative z-10 transition-all duration-300 ${
+                isActive(item.path)
+                  ? "text-[#FFFB00] drop-shadow-[0_0_8px_#FFFB00]"
+                  : "after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300"
+              }`}
             >
               {item.label}
+              {isActive(item.path) && (
+                <span className="absolute left-0 bottom-[-5px] w-full h-[2px] bg-[#FFFB00] shadow-[0_0_10px_#FFFB00]"></span>
+              )}
             </button>
           ))}
 
@@ -51,7 +61,11 @@ export default function Navbar() {
             src={avatar}
             onClick={() => navigate("/profile")}
             alt="profile"
-            className="w-10 h-10 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
+            className={`w-10 h-10 rounded-full border-[2px] cursor-pointer relative z-10 transition-all ${
+              isActive("/profile")
+                ? "border-[#FFFB00] shadow-[0_0_15px_#FFFB00] scale-110"
+                : "border-[#FFFB00] shadow-[0_0_10px_#FFFB00]"
+            }`}
           />
         </div>
 
@@ -81,9 +95,16 @@ export default function Navbar() {
               navigate(item.path);
               setMenuOpen(false);
             }}
-            className="relative z-10 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300"
+            className={`relative z-10 transition-all duration-300 ${
+              isActive(item.path)
+                ? "text-[#FFFB00] drop-shadow-[0_0_8px_#FFFB00]"
+                : "after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300"
+            }`}
           >
             {item.label}
+            {isActive(item.path) && (
+              <span className="absolute left-0 bottom-[-5px] w-full h-[2px] bg-[#FFFB00] shadow-[0_0_10px_#FFFB00]"></span>
+            )}
           </button>
         ))}
 
@@ -104,7 +125,11 @@ export default function Navbar() {
             setMenuOpen(false);
           }}
           alt="profile"
-          className="w-12 h-12 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
+          className={`w-12 h-12 rounded-full border-[2px] cursor-pointer relative z-10 transition-all ${
+            isActive("/profile")
+              ? "border-[#FFFB00] shadow-[0_0_15px_#FFFB00] scale-110"
+              : "border-[#FFFB00] shadow-[0_0_10px_#FFFB00]"
+          }`}
         />
       </div>
     </nav>
