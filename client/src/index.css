@@ -1,10 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
 @import "tailwindcss";
 
+html, body {
+  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  background: #111827; /* dark background, adjust as needed */
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-@theme {
-    --font-silkscreen: "Silkscreen", sans-serif; 
-  }
 
 /* Custom Scrollbar Styles */
 .custom-scrollbar {

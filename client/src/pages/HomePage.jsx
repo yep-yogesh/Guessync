@@ -215,15 +215,15 @@ const HomePage = () => {
           Play with friends, guess songs in seconds, and race to the top of the leaderboard.
         </p>
 <div className="flex flex-wrap justify-center items-center gap-3 mt-4">
-  <div className="skill-box hover-trigger">
-    <span className="skill-name">Listen</span>
+  <div className="skill-box hover-trigger cursor-pointer">
+    <span className="skill-name ">Listen</span>
     <FontAwesomeIcon icon={faEarListen} className="skill-icon" />
   </div>
-  <div className="skill-box hover-trigger">
+  <div className="skill-box hover-trigger cursor-pointer">
     <span className="skill-name">Guess</span>
     <FontAwesomeIcon icon={faBolt} className="skill-icon" />
   </div>
-  <div className="skill-box hover-trigger">
+  <div className="skill-box hover-trigger cursor-pointer">
     <span className="skill-name">Win</span>
     <FontAwesomeIcon icon={faTrophy} className="skill-icon" />
   </div>
@@ -232,6 +232,7 @@ const HomePage = () => {
 <style>
   {`
     /* Default skill-box styles (desktop hover works as before) */
+    
     .skill-box {
       background-color: rgba(255, 255, 255, 0.09);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -261,6 +262,7 @@ const HomePage = () => {
       transition: all 0.3s ease;
       z-index: 2;
     }
+      
     .skill-box:hover {
       background-color: #FFFB00;
       border-color: #FFFB00;
@@ -298,15 +300,79 @@ const HomePage = () => {
 
 
         {/* Login Button */}
-        <div className="flex justify-center items-center w-full mt-8 sm:mt-10">
-          <button
-            onClick={() => navigate("/login")}
-            className="glow-btn flex items-center gap-4 sm:gap-6 bg-[#FFFB00] text-black px-6 sm:px-8 md:px-10 py-2 sm:py-3 rounded-lg font-silkscreen text-lg sm:text-xl md:text-2xl"
-          >
-            <FontAwesomeIcon icon={faRightToBracket} size="lg" />
-            Login
-          </button>
-        </div>
+        {/* Login Button */}
+<div className="flex justify-center items-center w-full mt-8 sm:mt-10">
+  <button
+    onClick={() => navigate("/login")}
+    className="skill-box-login hover-trigger cursor-pointer flex items-center justify-center"
+  >
+    <span className="skill-name-login">Login</span>
+    <FontAwesomeIcon
+      icon={faRightToBracket}
+      size="lg"
+      className="skill-icon-login"
+    />
+  </button>
+</div>
+
+<style>
+{`
+  .skill-box-login {
+    background-color: #FFFB00;
+    border: 1px solid #FFFB00;
+    border-radius: 16px; /* 🔥 different border-radius only for login */
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    height: 50px;
+    width: 140px;
+    color: black;
+  }
+
+  .skill-name-login {
+    transition: all 0.3s ease;
+    z-index: 1;
+  }
+
+  .skill-icon-login {
+    position: absolute;
+    font-size: 1.3rem;
+    color: #FFFB00; /* 🔥 yellow icon */
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 2;
+  }
+
+  .skill-box-login:hover {
+    background-color: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 1rem;
+              box-shadow: 0 0 10px #FFFB00, 0 0 20px #FFFB00 !important;
+
+ 
+}
+
+
+  .skill-box-login:hover .skill-name-login {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .skill-box-login:hover .skill-icon-login {
+    opacity: 1;
+  }
+`}
+</style>
+
       </div>
     </div>
   );
