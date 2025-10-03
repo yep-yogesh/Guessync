@@ -94,7 +94,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      <Navbar />
       <div className="flex flex-col lg:flex-row items-center justify-center flex-1 gap-10 px-6 py-10">
         {/* Login Form */}
         <div className="bg-[#FFFB00] p-6 sm:p-8 rounded-xl shadow-xl text-black w-full sm:w-[320px] md:w-[380px] lg:w-[420px]">

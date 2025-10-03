@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import GlowingButton from "../components/common/GlowingButton";
 import {
   faRightToBracket,
   faEarListen,
@@ -307,6 +308,26 @@ const HomePage = () => {
             Login
           </button>
         </div>
+         <div className="flex flex-col md:flex-row gap-6 md:gap-12 mt-8 w-full items-center justify-center">
+                    <div className="flex flex-col items-center w-full sm:w-auto">
+                      <GlowingButton
+                        text="About Dev"
+                        color="white"
+                        className="w-[200px] sm:w-[220px] md:w-[240px] lg:w-[280px] font-silkscreen text-sm sm:text-base md:text-lg"
+                        onClick={() => navigate("/about")}
+                        disabled={!name.trim() || !avatar}
+                      />
+                    </div>
+                    <div className="flex flex-col items-center w-full sm:w-auto">
+                      <GlowingButton
+                        text="CREATE A ROOM"
+                        color="yellow"
+                        className="w-[200px] sm:w-[220px] md:w-[240px] lg:w-[280px] font-silkscreen text-sm sm:text-base md:text-lg"
+                        onClick={() => navigate("/how-to-play")}
+                        disabled={!name.trim() || !avatar}
+                      />
+                    </div>
+                  </div>
       </div>
     </div>
   );
