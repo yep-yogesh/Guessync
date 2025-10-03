@@ -10,6 +10,13 @@ import {
 
 const HomePage = () => {
   const navigate = useNavigate();
+  // ✅ Redirect if already logged in
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        navigate("/landing", { replace: true });
+      }
+    }, [navigate]);
   const blobRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({
     x: window.innerWidth / 2,
