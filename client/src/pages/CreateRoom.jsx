@@ -145,7 +145,44 @@ const CreateRoom = () => {
   const showCreateBtn = selectedLanguage || spotifyConfirmed;
 
 return (
-<div className="bg-black min-h-screen flex flex-col text-white font-montserrat">
+<div className="bg-black min-h-screen flex flex-col text-white font-montserrat overflow-y-auto overflow-x-hidden" 
+     style={{
+       scrollbarWidth: 'thin',
+       scrollbarColor: '#FFFB00 #111111'
+     }}>
+  <style jsx>{`
+    div::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    div::-webkit-scrollbar-track {
+      background: #000000;
+      border-left: 2px solid #333333;
+    }
+    
+    div::-webkit-scrollbar-thumb {
+      background: #FFFB00;
+      border: 2px solid #000000;
+      box-shadow: 
+        inset 2px 2px 0 #FFFF33,
+        inset -2px -2px 0 #CCCC00;
+    }
+    
+    div::-webkit-scrollbar-thumb:hover {
+      background: #FFE500;
+      box-shadow: 
+        inset 2px 2px 0 #FFFF66,
+        inset -2px -2px 0 #999900,
+        0 0 12px #FFFB00;
+    }
+    
+    div::-webkit-scrollbar-thumb:active {
+      background: #CCCC00;
+      box-shadow: 
+        inset -2px -2px 0 #FFFF33,
+        inset 2px 2px 0 #999900;
+    }
+  `}</style>
   <Navbar />
   <div className="flex-1 flex flex-col items-center px-4 py-6 sm:px-6 md:px-8 lg:justify-center lg:scale-125">
 
