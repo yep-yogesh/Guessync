@@ -5,3 +5,29 @@
 @theme {
     --font-silkscreen: "Silkscreen", sans-serif; 
   }
+
+/* Custom Scrollbar Styles */
+.custom-scrollbar {
+  /* Webkit browsers */
+  scrollbar-width: thin;
+  scrollbar-color: #FBBF24 #374151;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #374151;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #FBBF24;
+  border-radius: 10px;
+  border: 1px solid #374151;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #F59E0B;
+}
