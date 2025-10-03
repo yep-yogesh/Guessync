@@ -19,7 +19,7 @@ const socketHandler = (io) => {
 
     socket.on("join-room", async ({ roomCode, user }) => {
       try {
-        await socket.join(roomCode);
+        roomCode = String(roomCode);
         console.log(`${socket.id} joined room ${roomCode}`);
 
         let room = await Room.findOne({ code: roomCode });
@@ -34,6 +34,8 @@ const socketHandler = (io) => {
           await room.save();
           console.log(`+ ${user.name} added to room ${roomCode}`);
         }
+
+        await socket.join(roomCode);
 
         process.nextTick(() => {
           io.to(roomCode).emit("room-updated", {
