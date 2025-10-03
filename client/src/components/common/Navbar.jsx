@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // hamburger + close icons
+import { Menu, X, LogOut } from "lucide-react"; // hamburger + close icons
+import { AuthContext } from "../../context/AuthContext";
 import avatar from "/avatars/1.png";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, authType, logout } = useContext(AuthContext);
+  
+  const isAuthenticated = user && authType === 'user';
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
   const navItems = [
     { label: "Home", path: "/landing" },
     { label: "New Room", path: "/create-room" },
@@ -40,15 +48,25 @@ export default function Navbar() {
             </button>
           ))}
 
-          <button
-            onClick={() => navigate("/login")}
-            className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
-          >
-            Login
-          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-[6px] shadow-[0_0_10px_red] hover:scale-105 transition font-silkscreen relative z-10"
+            >
+              <LogOut size={16} />
+              Logout
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
+            >
+              Login
+            </button>
+          )}
 
           <img
-            src={avatar}
+            src={isAuthenticated && user?.avatar ? user.avatar : avatar}
             onClick={() => navigate("/profile")}
             alt="profile"
             className="w-10 h-10 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
@@ -87,18 +105,31 @@ export default function Navbar() {
           </button>
         ))}
 
-        <button
-          onClick={() => {
-            navigate("/login");
-            setMenuOpen(false);
-          }}
-          className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
-        >
-          Login
-        </button>
+        {isAuthenticated ? (
+          <button
+            onClick={() => {
+              handleLogout();
+              setMenuOpen(false);
+            }}
+            className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-[6px] shadow-[0_0_10px_red] hover:scale-105 transition font-silkscreen relative z-10"
+          >
+            <LogOut size={16} />
+            Logout
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              navigate("/login");
+              setMenuOpen(false);
+            }}
+            className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
+          >
+            Login
+          </button>
+        )}
 
         <img
-          src={avatar}
+          src={isAuthenticated && user?.avatar ? user.avatar : avatar}
           onClick={() => {
             navigate("/profile");
             setMenuOpen(false);
