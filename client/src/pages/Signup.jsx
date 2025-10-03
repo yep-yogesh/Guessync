@@ -9,6 +9,7 @@ import {
 import { auth, provider } from "../config/firebase";
 import AvatarGrid from "../components/common/AvatarGrid";
 import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -224,6 +225,7 @@ const Signup = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

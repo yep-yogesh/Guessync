@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 import { useNavigate } from "react-router-dom";
 import socket from "../socket";
 import sendIcon from "../assets/send.png";
@@ -29,25 +30,6 @@ const CreateRoom = () => {
   const [rulesFile, setRulesFile] = useState(null);
   const [showRulesModal, setShowRulesModal] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-  const handleResize = () => {
-    if (window.innerWidth >= 1024) {
-      document.body.style.overflow = "hidden"; // lock scroll
-    } else {
-      document.body.style.overflow = "auto";   // allow scroll
-    }
-  };
-
-  handleResize(); // run on mount
-  window.addEventListener("resize", handleResize);
-
-  return () => {
-    document.body.style.overflow = "auto"; // cleanup
-    window.removeEventListener("resize", handleResize);
-  };
-}, []);
-
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -145,9 +127,9 @@ const CreateRoom = () => {
   const showCreateBtn = selectedLanguage || spotifyConfirmed;
 
 return (
-<div className="bg-black min-h-screen flex flex-col text-white font-montserrat">
+<div className="bg-black flex flex-col text-white font-montserrat">
   <Navbar />
-  <div className="flex-1 flex flex-col items-center px-4 py-6 sm:px-6 md:px-8 lg:justify-center lg:scale-125">
+  <div className="min-h-screen flex flex-col items-center px-4 py-6 sm:px-6 md:px-8">
 
       {/* Title */}
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 drop-shadow-[0_0_5px_#111] mt-6 sm:mt-10 text-center">
@@ -421,7 +403,12 @@ return (
           </div>
         </div>
       )}
+      
+      {/* Spacer to ensure scrolling */}
+      <div className="h-20"></div>
+      
       </div> 
+      <Footer />
     </div>
   );
 };

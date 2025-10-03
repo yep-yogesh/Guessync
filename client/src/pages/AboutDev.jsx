@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 
 const AboutDev = () => {
   const [displayText, setDisplayText] = useState("");
@@ -36,7 +37,7 @@ const AboutDev = () => {
   ];
 
   return (
-    <div className="h-screen bg-black text-white font-sans relative flex flex-col overflow-y-auto lg:overflow-hidden">
+    <div className="bg-black text-white font-sans relative flex flex-col">
       <style>
         {`
           .social-icon {
@@ -106,8 +107,8 @@ const AboutDev = () => {
       {/* Fixed Navbar */}
       <Navbar />
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col md:flex-row justify-center items-center gap-1 sm:gap-5 lg:gap-14 px-4 sm:px-8 lg:px-12 pt-0 pb-2 sm:py-6">
+      {/* Main Content - Full viewport height */}
+      <div className="min-h-screen flex flex-col md:flex-row justify-center items-center gap-1 sm:gap-5 lg:gap-14 px-4 sm:px-8 lg:px-12 py-8 sm:py-10 lg:py-12">
         {/* Profile Image */}
         <div className="relative flex justify-center items-center">
           <img
@@ -178,6 +179,7 @@ const AboutDev = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

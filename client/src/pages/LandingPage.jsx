@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AvatarSelector from "../components/LandingPage/AvatarSelector";
 import GlowingButton from "../components/common/GlowingButton";
 import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function LandingPage() {
     userData?.avatar || localStorage.getItem("userAvatar") || null
   );
   const [greeted, setGreeted] = useState(!!userData || (!!name && !!avatar));
-  const [isSignedUp, setIsSignedUp] = useState(!!userData);
+  const isSignedUp = !!userData; // User is signed up if userData exists
 
   useEffect(() => {
     if (name.trim()) localStorage.setItem("userName", name);
@@ -34,12 +35,12 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="bg-black text-white font-montserrat h-screen w-screen overflow-hidden flex flex-col">
+    <div className="bg-black text-white font-montserrat flex flex-col">
       <Navbar />
 
-      {/* Scale landing body */}
-      <div className="flex-1 flex items-start sm:items-center justify-center px-4 pt-3 sm:pt-0">
-        <div className="flex flex-col justify-center items-center w-full scale-[1.05] sm:scale-100 md:scale-[1.25]">
+      {/* Scale landing body - Takes full viewport height */}
+      <div className="min-h-screen flex items-center justify-center px-4 py-8">
+        <div className="flex flex-col justify-center items-center w-full max-w-4xl">
           {/* Greeting */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 text-center">
             Hello{greeted ? `, ${name}!` : "!"}
@@ -124,8 +125,12 @@ export default function LandingPage() {
               />
             </div>
           </div>
+          
+          {/* Spacer to ensure footer is below viewport */}
+          <div className="h-20"></div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
