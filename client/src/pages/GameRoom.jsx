@@ -413,13 +413,66 @@ const GameRoom = () => {
     }
   };
 
-  if (!song) {
+  const LoadingOverlay = ({ text = "Starting Game..." }) => {
+    const [movingBlobs, setMovingBlobs] = useState([]);
+    const rafRef = useRef(null);
+
+    useEffect(() => {
+      const blobs = [];
+      const numBlobs = Math.floor(Math.random() * 70) + 20;
+      for (let i = 0; i < numBlobs; i++) {
+        const size = Math.random() * 160 + 180;
+        const speedX = (Math.random() * 2 - 1) * 6.5;
+        const speedY = (Math.random() * 2 - 1) * 6.5;
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        const opacity = Math.random() * 0.05 + 0.07;
+        blobs.push({ id: i, size, x, y, speedX, speedY, opacity, color: "#FFFB00" });
+      }
+      setMovingBlobs(blobs);
+
+      const animate = () => {
+        setMovingBlobs((prev) =>
+          prev.map((b) => {
+            let x = b.x + b.speedX;
+            let y = b.y + b.speedY;
+            if (x < 0 || x > window.innerWidth - b.size) b.speedX *= -1, (x = b.x + b.speedX);
+            if (y < 0 || y > window.innerHeight - b.size) b.speedY *= -1, (y = b.y + b.speedY);
+            return { ...b, x, y };
+          })
+        );
+        rafRef.current = requestAnimationFrame(animate);
+      };
+      animate();
+      return () => rafRef.current && cancelAnimationFrame(rafRef.current);
+    }, []);
+
     return (
-      <div className="h-screen w-full bg-black text-white flex flex-col items-center justify-center font-silkscreen">
-        <div className="w-12 h-12 border-4 border-[#FFFB00] border-t-transparent rounded-full animate-spin mb-6"></div>
-        <h2 className="text-2xl font-bold text-white">Starting Game...</h2>
+      <div className="h-screen w-full bg-black text-white flex flex-col items-center justify-center font-silkscreen relative overflow-hidden">
+        {movingBlobs.map((blob) => (
+          <div
+            key={blob.id}
+            className="absolute rounded-full blur-3xl"
+            style={{
+              width: `${blob.size}px`,
+              height: `${blob.size}px`,
+              left: `${blob.x}px`,
+              top: `${blob.y}px`,
+              backgroundColor: blob.color,
+              opacity: blob.opacity,
+            }}
+          />
+        ))}
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-[#FFFB00] border-t-transparent rounded-full animate-spin mb-6"></div>
+          <h2 className="text-2xl font-bold text-white">{text}</h2>
+        </div>
       </div>
     );
+  };
+
+  if (!song) {
+    return <LoadingOverlay text="Starting Game..." />;
   }
 
 if (gameOver) {

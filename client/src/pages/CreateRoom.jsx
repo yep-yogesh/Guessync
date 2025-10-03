@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../components/common/Navbar";
 import { useNavigate } from "react-router-dom";
 import socket from "../socket";
@@ -28,6 +28,7 @@ const CreateRoom = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [rulesFile, setRulesFile] = useState(null);
   const [showRulesModal, setShowRulesModal] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,6 +60,73 @@ const CreateRoom = () => {
     setSelectedLanguage((prev) => (prev === lang ? "" : lang));
   };
 
+  // Smooth moving blobs overlay (theme-matched)
+  const LoadingOverlay = ({ text = "Loading..." }) => {
+    const [movingBlobs, setMovingBlobs] = useState([]);
+    const rafRef = useRef(null);
+
+    useEffect(() => {
+      const genBlobs = () => {
+        const blobs = [];
+        const numBlobs = Math.floor(Math.random() * 70) + 20;
+        for (let i = 0; i < numBlobs; i++) {
+          const size = Math.random() * 160 + 180;
+          const speedX = (Math.random() * 2 - 1) * 6.5;
+          const speedY = (Math.random() * 2 - 1) * 6.5;
+          const x = Math.random() * window.innerWidth;
+          const y = Math.random() * window.innerHeight;
+          const opacity = Math.random() * 0.05 + 0.07;
+          blobs.push({ id: i, size, x, y, speedX, speedY, opacity, color: "#FFFB00" });
+        }
+        setMovingBlobs(blobs);
+      };
+
+      const animate = () => {
+        setMovingBlobs((prev) =>
+          prev.map((b) => {
+            let x = b.x + b.speedX;
+            let y = b.y + b.speedY;
+            if (x < 0 || x > window.innerWidth - b.size) b.speedX *= -1, (x = b.x + b.speedX);
+            if (y < 0 || y > window.innerHeight - b.size) b.speedY *= -1, (y = b.y + b.speedY);
+            return { ...b, x, y };
+          })
+        );
+        rafRef.current = requestAnimationFrame(animate);
+      };
+
+      genBlobs();
+      animate();
+      return () => {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      };
+    }, []);
+
+    return (
+      <div className="fixed inset-0 z-50 bg-black text-white flex items-center justify-center">
+        {/* Background floating blobs */}
+        {movingBlobs.map((blob) => (
+          <div
+            key={blob.id}
+            className="absolute rounded-full blur-3xl"
+            style={{
+              width: `${blob.size}px`,
+              height: `${blob.size}px`,
+              left: `${blob.x}px`,
+              top: `${blob.y}px`,
+              backgroundColor: blob.color,
+              opacity: blob.opacity,
+            }}
+          />
+        ))}
+        {/* Center spinner + text */}
+        <div className="relative z-10 flex flex-col items-center font-silkscreen">
+          <div className="w-12 h-12 border-4 border-[#FFFB00] border-t-transparent rounded-full animate-spin mb-6"></div>
+          <h2 className="text-2xl font-bold">{text}</h2>
+        </div>
+      </div>
+    );
+  };
+
   const handleCreateRoom = async () => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
@@ -66,6 +134,8 @@ const CreateRoom = () => {
       alert("Please log in first!");
       return;
     }
+    if (isCreating) return; // prevent multiple clicks
+    setIsCreating(true);
 
     socket.auth = { uid: user.uid };
     socket.connect();
@@ -78,11 +148,13 @@ const CreateRoom = () => {
       playlistId = DEFAULT_PLAYLISTS[selectedLanguage];
       useSpotify = true;
     } else if (spotifyConfirmed && spotifyValue.trim()) {
-      playlistId = spotifyValue.split("playlist/")[1]?.split("?")[0];
-      if (!playlistId) {
+      const extracted = spotifyValue.split("playlist/")[1]?.split("?")[0];
+      if (!extracted) {
         alert("❌ Invalid Spotify Playlist URL");
+        setIsCreating(false);
         return;
       }
+      playlistId = extracted;
       useSpotify = true;
     }
 
@@ -134,10 +206,12 @@ const CreateRoom = () => {
           navigate("/waiting-room");
         } else {
           alert("❌ Failed to create room: " + data.message);
+          setIsCreating(false);
         }
       } catch (err) {
         console.error("Error creating room:", err);
         alert("❌ Something went wrong.");
+        setIsCreating(false);
       }
     }
   };
@@ -146,7 +220,9 @@ const CreateRoom = () => {
 
 return (
 <div className="bg-black min-h-screen flex flex-col text-white font-montserrat">
-  <Navbar />
+  {isCreating && <LoadingOverlay text="Creating Room..." />}
+  {!isCreating && <Navbar />}
+
   <div className="flex-1 flex flex-col items-center px-4 py-6 sm:px-6 md:px-8 lg:justify-center lg:scale-125">
 
       {/* Title */}
@@ -312,10 +388,11 @@ return (
 
         {showCreateBtn && (
           <button
-          onClick={handleCreateRoom}
-          className="bg-[#FFFB00] text-black font-silkscreen px-6 py-3 rounded-lg text-base md:text-xl drop-shadow-[0_0_7px_#FFFB00] hover:drop-shadow-[0_0_10px_#FFFB00] w-full md:w-[240px] md:h-14"
+            onClick={handleCreateRoom}
+            disabled={isCreating}
+            className={`bg-[#FFFB00] text-black font-silkscreen px-6 py-3 rounded-lg text-base md:text-xl drop-shadow-[0_0_7px_#FFFB00] hover:drop-shadow-[0_0_10px_#FFFB00] w-full md:w-[240px] md:h-14 ${isCreating ? "opacity-60 cursor-not-allowed hover:drop-shadow-none" : ""}`}
           >
-            CREATE ROOM
+            {isCreating ? "CREATING..." : "CREATE ROOM"}
           </button>
         )}
       </div>
