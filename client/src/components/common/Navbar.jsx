@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // hamburger + close icons
 import avatar from "/avatars/1.png";
 
@@ -14,6 +14,7 @@ export default function Navbar() {
     { label: "How to Play", path: "/how-to-play" },
   ];
 
+  const { pathname } = useLocation();
   return (
     <nav className="w-full bg-black text-white font-montserrat shadow-md relative z-50">
       <div className="flex items-center justify-between px-6 py-4">
@@ -34,7 +35,9 @@ export default function Navbar() {
             <button
               key={item.label}
               onClick={() => navigate(item.path)}
-              className="relative z-10 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300"
+              className={`relative z-10 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300 ${
+                pathname === item.path && "after:w-full"
+              }`}
             >
               {item.label}
             </button>
