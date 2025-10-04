@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import socket from "../socket";
 import { useNavigate } from "react-router-dom";
 
@@ -52,18 +52,85 @@ const WaitingRoom = () => {
 
   const isHost = currentUID === hostUID;
 
+  // Resolve avatar value (number, "/avatars/x.png", "3", or external URL) to a valid img src
+  const getAvatarSrc = (avatar) => {
+    if (!avatar) return "/avatars/1.png";
+    if (typeof avatar === "number") return `/avatars/${avatar}.png`;
+    if (typeof avatar === "string") {
+      if (/^https?:\/\//.test(avatar)) return avatar;         // absolute URL
+      if (avatar.startsWith("/avatars/")) return avatar;       // already a path
+      if (/^\d+$/.test(avatar)) return `/avatars/${avatar}.png`; // numeric string
+      return avatar; // fallback as-is
+    }
+    return "/avatars/1.png";
+  };
+
   const handleStartGame = () => {
     socket.emit("start-game", { roomCode });
     setIsMovingToGame(true);
   };
 
-  if (isMovingToGame) {
+  // Theme-matched smooth blob loading screen
+  const LoadingOverlay = ({ text = "Loading..." }) => {
+    const [movingBlobs, setMovingBlobs] = useState([]);
+    const rafRef = useRef(null);
+
+    useEffect(() => {
+      const blobs = [];
+      const numBlobs = Math.floor(Math.random() * 70) + 20;
+      for (let i = 0; i < numBlobs; i++) {
+        const size = Math.random() * 160 + 180;
+        const speedX = (Math.random() * 2 - 1) * 6.5;
+        const speedY = (Math.random() * 2 - 1) * 6.5;
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        const opacity = Math.random() * 0.05 + 0.07;
+        blobs.push({ id: i, size, x, y, speedX, speedY, opacity, color: "#FFFB00" });
+      }
+      setMovingBlobs(blobs);
+
+      const animate = () => {
+        setMovingBlobs((prev) =>
+          prev.map((b) => {
+            let x = b.x + b.speedX;
+            let y = b.y + b.speedY;
+            if (x < 0 || x > window.innerWidth - b.size) b.speedX *= -1, (x = b.x + b.speedX);
+            if (y < 0 || y > window.innerHeight - b.size) b.speedY *= -1, (y = b.y + b.speedY);
+            return { ...b, x, y };
+          })
+        );
+        rafRef.current = requestAnimationFrame(animate);
+      };
+      animate();
+      return () => rafRef.current && cancelAnimationFrame(rafRef.current);
+    }, []);
+
     return (
-      <div className="h-screen w-full bg-black text-white flex flex-col items-center justify-center font-silkscreen">
-        <div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mb-6"></div>
-        <h2 className="text-2xl font-bold">Starting Game...</h2>
+      <div className="h-screen w-full bg-black text-white flex flex-col items-center justify-center font-silkscreen relative overflow-hidden">
+        {movingBlobs.map((blob) => (
+          <div
+            key={blob.id}
+            className="absolute rounded-full blur-3xl"
+            style={{
+              width: `${blob.size}px`,
+              height: `${blob.size}px`,
+              left: `${blob.x}px`,
+              top: `${blob.y}px`,
+              backgroundColor: blob.color,
+              opacity: blob.opacity,
+            }}
+          />
+        ))}
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-[#FFFB00] border-t-transparent rounded-full animate-spin mb-6"></div>
+          <h2 className="text-2xl font-bold">{text}</h2>
+        </div>
       </div>
     );
+  };
+
+  if (isMovingToGame) {
+    return <LoadingOverlay text="Starting Game..." />;
   }
 
   return (
@@ -76,12 +143,20 @@ const WaitingRoom = () => {
             {players.map((p) => (
               <li key={p.uid} className="flex items-center gap-2 bg-[#2d2d2d58] p-2 rounded-lg">
                 <img
-                  src={`/avatars/${p.avatar || 1}.png`}
+                  src={getAvatarSrc(p.avatar)}
                   alt={p.name}
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 rounded-sm"
+                  onError={(e) => { e.currentTarget.src = "/avatars/1.png"; }}
                 />
                 <span className={`text-xs sm:text-sm lg:text-base ${p.uid === currentUID ? "text-yellow-400" : ""}`}>
-                  {p.name} {p.uid === hostUID && "👑"}
+                  {p.name}
+                  {p.uid === hostUID && (
+                    <i
+                      className="fa-solid fa-crown text-yellow-400 ml-3"
+                      aria-label="Host"
+                      title="Host"
+                    />
+                  )}
                 </span>
               </li>
             ))}
