@@ -144,6 +144,8 @@ const HomePage = () => {
     <div
       className="relative w-full h-screen overflow-hidden bg-black text-white flex flex-col justify-center items-center px-4 sm:px-6 md:px-10"
       ref={containerRef}
+      role="main"
+      aria-label="Guessync homepage"
     >
       <style>
         {`
@@ -184,15 +186,18 @@ const HomePage = () => {
       ))}
 
       {/* Main Content */}
-      <div className="z-10 text-center space-y-6 w-full">
+      <main className="z-10 text-center space-y-6 w-full">
         {/* Logo + Title */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+        <header className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
           <img
             src="/logo.png"
-            alt="logo"
+            alt="Guessync logo"
             className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mt-4 sm:mt-6"
           />
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-silkscreen text-white">
+          <h1 
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-silkscreen text-white"
+            aria-label="Guessync - Fast-paced multiplayer music guessing game"
+          >
             {letters.map((letter, index) => (
               <span
                 key={index}
@@ -201,33 +206,57 @@ const HomePage = () => {
                     ? "text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]"
                     : ""
                 }`}
+                aria-hidden="true"
               >
                 {letter}
               </span>
             ))}
           </h1>
-        </div>
+        </header>
 
         {/* Tagline */}
-        <p className="text-base sm:text-lg md:text-xl text-white max-w-md sm:max-w-lg md:max-w-2xl mx-auto leading-relaxed px-2">
-          Fast-paced multiplayer music guessing game.
-          <br className="hidden sm:block" />
-          Play with friends, guess songs in seconds, and race to the top of the leaderboard.
-        </p>
-<div className="flex flex-wrap justify-center items-center gap-3 mt-4">
-  <div className="skill-box hover-trigger">
-    <span className="skill-name">Listen</span>
-    <FontAwesomeIcon icon={faEarListen} className="skill-icon" />
-  </div>
-  <div className="skill-box hover-trigger">
-    <span className="skill-name">Guess</span>
-    <FontAwesomeIcon icon={faBolt} className="skill-icon" />
-  </div>
-  <div className="skill-box hover-trigger">
-    <span className="skill-name">Win</span>
-    <FontAwesomeIcon icon={faTrophy} className="skill-icon" />
-  </div>
-</div>
+        <section aria-labelledby="game-description">
+          <h2 id="game-description" className="sr-only">Game Description</h2>
+          <p className="text-base sm:text-lg md:text-xl text-white max-w-md sm:max-w-lg md:max-w-2xl mx-auto leading-relaxed px-2">
+            Fast-paced multiplayer music guessing game.
+            <br className="hidden sm:block" />
+            Play with friends, guess songs in seconds, and race to the top of the leaderboard.
+          </p>
+        </section>
+        {/* Game Features */}
+        <section aria-labelledby="game-features">
+          <h2 id="game-features" className="sr-only">How to Play</h2>
+          <div 
+            className="flex flex-wrap justify-center items-center gap-3 mt-4"
+            role="list"
+            aria-label="Game play steps"
+          >
+            <div 
+              className="skill-box hover-trigger"
+              role="listitem"
+              aria-label="Step 1: Listen to music"
+            >
+              <span className="skill-name">Listen</span>
+              <FontAwesomeIcon icon={faEarListen} className="skill-icon" aria-hidden="true" />
+            </div>
+            <div 
+              className="skill-box hover-trigger"
+              role="listitem"
+              aria-label="Step 2: Guess the song"
+            >
+              <span className="skill-name">Guess</span>
+              <FontAwesomeIcon icon={faBolt} className="skill-icon" aria-hidden="true" />
+            </div>
+            <div 
+              className="skill-box hover-trigger"
+              role="listitem"
+              aria-label="Step 3: Win points"
+            >
+              <span className="skill-name">Win</span>
+              <FontAwesomeIcon icon={faTrophy} className="skill-icon" aria-hidden="true" />
+            </div>
+          </div>
+        </section>
 
 <style>
   {`
@@ -301,13 +330,20 @@ const HomePage = () => {
         <div className="flex justify-center items-center w-full mt-8 sm:mt-10">
           <button
             onClick={() => navigate("/login")}
-            className="glow-btn flex items-center gap-4 sm:gap-6 bg-[#FFFB00] text-black px-6 sm:px-8 md:px-10 py-2 sm:py-3 rounded-lg font-silkscreen text-lg sm:text-xl md:text-2xl"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate("/login");
+              }
+            }}
+            className="glow-btn flex items-center gap-4 sm:gap-6 bg-[#FFFB00] text-black px-6 sm:px-8 md:px-10 py-2 sm:py-3 rounded-lg font-silkscreen text-lg sm:text-xl md:text-2xl focus:outline-none focus:ring-4 focus:ring-white focus:ring-offset-4 focus:ring-offset-black transition-all"
+            aria-label="Go to login page to start playing"
           >
-            <FontAwesomeIcon icon={faRightToBracket} size="lg" />
+            <FontAwesomeIcon icon={faRightToBracket} size="lg" aria-hidden="true" />
             Login
           </button>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
