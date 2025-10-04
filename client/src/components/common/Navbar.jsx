@@ -34,7 +34,7 @@ export default function Navbar() {
             <button
               key={item.label}
               onClick={() => navigate(item.path)}
-              className="relative z-10 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300"
+              className="transition-all duration-200 hover:scale-105 cursor-pointer relative z-10 after:absolute after:left-0 after:bottom-[-5px] after:w-0 after:h-[2px] after:bg-[#FFFB00] after:shadow-[0_0_10px_#FFFB00] hover:after:w-full after:transition-all after:duration-300"
             >
               {item.label}
             </button>
@@ -42,7 +42,7 @@ export default function Navbar() {
 
           <button
             onClick={() => navigate("/login")}
-            className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
+            className="cursor-pointer bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
           >
             Login
           </button>
