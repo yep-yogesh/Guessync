@@ -21,6 +21,7 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleEmailLogin = async () => {
     if (!validateEmailLogin()) return;
 

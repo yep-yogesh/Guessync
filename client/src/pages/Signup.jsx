@@ -16,8 +16,10 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [errors, setErrors] = useState({});
+  const [passwordErrors, setPasswordErrors] = useState([]);
   const navigate = useNavigate();
 
+  // Validate basic fields
   const validateFields = () => {
     const newErrors = {};
     if (!name.trim()) newErrors.name = "Enter your name";
@@ -28,8 +30,21 @@ const Signup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Validate password rules and return an array of messages for failing rules
+  const validatePassword = (pwd) => {
+    const errors = [];
+    if (pwd.length < 8) errors.push("Password must be at least 8 characters long");
+    if (!/[A-Z]/.test(pwd)) errors.push("Password must contain at least one uppercase letter");
+    if (!/[a-z]/.test(pwd)) errors.push("Password must contain at least one lowercase letter");
+    return errors;
+  };
+
   const handleEmailSignup = async () => {
-    if (!validateFields()) return;
+    const fieldsValid = validateFields();
+    const pwdErrors = validatePassword(password);
+    setPasswordErrors(pwdErrors);
+
+    if (!fieldsValid || pwdErrors.length > 0) return; // stop signup if any validation fails
 
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
@@ -98,6 +113,7 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
       <Navbar />
+
       <div className="flex flex-col lg:flex-row items-center justify-center flex-1 gap-10 px-6 py-10">
         {/* Signup Form */}
         <div className="bg-[#FFFB00] p-6 sm:p-8 rounded-xl shadow-xl text-black w-full sm:w-[320px] md:w-[380px] lg:w-[420px]">
@@ -119,9 +135,7 @@ const Signup = () => {
             onChange={(e) => setName(e.target.value)}
           />
           {errors.name && (
-            <p className="text-red-500 text-xs font-silkscreen mb-2">
-              {errors.name}
-            </p>
+            <p className="text-red-500 text-xs font-silkscreen mb-2">{errors.name}</p>
           )}
 
           {/* Email */}
@@ -138,30 +152,45 @@ const Signup = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           {errors.email && (
-            <p className="text-red-500 text-xs font-silkscreen mb-2">
-              {errors.email}
-            </p>
+            <p className="text-red-500 text-xs font-silkscreen mb-2">{errors.email}</p>
           )}
 
           {/* Password */}
-          <label className="block text-xs sm:text-sm font-silkscreen mb-1">
-            ENTER YOUR PASSWORD
-          </label>
-          <input
-            type="password"
-            className={`w-full rounded px-3 py-2 mb-1 text-black bg-white border-2 transition ${
-              errors.password ? "border-red-500" : "border-transparent"
-            }`}
-            value={password}
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-xs font-silkscreen mb-2">
-              {errors.password}
-            </p>
-          )}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleEmailSignup();
+            }}
+          >
+            <label className="block text-xs sm:text-sm font-silkscreen mb-1">
+              ENTER YOUR PASSWORD
+            </label>
+            <input
+              type="password"
+              className={`w-full rounded px-3 py-2 mb-1 text-black bg-white border-2 transition ${
+                errors.password || passwordErrors.length > 0
+                  ? "border-red-500"
+                  : "border-transparent"
+              }`}
+              value={password}
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
+            {/* Display each password error */}
+            {passwordErrors.map((err, index) => (
+              <p key={index} className="text-red-500 text-xs font-silkscreen mt-1">
+                {err}
+              </p>
+            ))}
+
+            {/* Firebase general password error */}
+            {errors.password && (
+              <p className="text-red-500 text-xs font-silkscreen mt-1">{errors.password}</p>
+            )}
+          </form>
+
+          {/* Signup Button */}
           <button
             className="bg-black text-white w-full py-2 rounded mb-3 font-silkscreen hover:scale-105 transition"
             onClick={handleEmailSignup}
@@ -186,6 +215,7 @@ const Signup = () => {
             </span>
           </p>
 
+          {/* Google Signup */}
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleGoogleSignup}
@@ -218,9 +248,7 @@ const Signup = () => {
           />
 
           {errors.avatar && (
-            <p className="text-red-500 text-xs font-silkscreen -mt-2">
-              {errors.avatar}
-            </p>
+            <p className="text-red-500 text-xs font-silkscreen -mt-2">{errors.avatar}</p>
           )}
         </div>
       </div>
