@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // hamburger + close icons
-import avatar from "/avatars/1.png";
-
+import { Menu, X } from "lucide-react";
+import defaultAvatar from "/avatars/1.png"; // Renamed for clarity
+import { useAuth } from "../../context/AuthContext";
 export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  
+  // 2. Get the current user and logout function from the context
+  const { currentUser, logout } = useAuth();
 
   const navItems = [
     { label: "Home", path: "/landing" },
@@ -13,6 +16,15 @@ export default function Navbar() {
     { label: "About Dev", path: "/about" },
     { label: "How to Play", path: "/how-to-play" },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login"); // Redirect to login after logout
+    } catch (error) {
+      console.error("Failed to log out", error);
+    }
+  };
 
   return (
     <nav className="w-full bg-black text-white font-montserrat shadow-md relative z-50">
@@ -40,19 +52,32 @@ export default function Navbar() {
             </button>
           ))}
 
-          <button
-            onClick={() => navigate("/login")}
-            className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
-          >
-            Login
-          </button>
-
-          <img
-            src={avatar}
-            onClick={() => navigate("/profile")}
-            alt="profile"
-            className="w-10 h-10 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
-          />
+          {/* 3. Conditional rendering for Login/Logout buttons and Avatar */}
+          {currentUser ? (
+            // If user is logged in:
+            <>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FF0000] hover:scale-105 transition font-silkscreen relative z-10"
+              >
+                Logout
+              </button>
+              <img
+                src={currentUser.photoURL || defaultAvatar}
+                onClick={() => navigate("/profile")}
+                alt="profile"
+                className="w-10 h-10 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
+              />
+            </>
+          ) : (
+            // If user is logged out:
+            <button
+              onClick={() => navigate("/login")}
+              className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
+            >
+              Login
+            </button>
+          )}
         </div>
 
         {/* Mobile Hamburger */}
@@ -87,25 +112,41 @@ export default function Navbar() {
           </button>
         ))}
 
-        <button
-          onClick={() => {
-            navigate("/login");
-            setMenuOpen(false);
-          }}
-          className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
-        >
-          Login
-        </button>
-
-        <img
-          src={avatar}
-          onClick={() => {
-            navigate("/profile");
-            setMenuOpen(false);
-          }}
-          alt="profile"
-          className="w-12 h-12 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
-        />
+        {/* 4. Same conditional rendering for the mobile menu */}
+        {currentUser ? (
+          // If user is logged in:
+          <>
+            <button
+              onClick={() => {
+                handleLogout();
+                setMenuOpen(false);
+              }}
+              className="bg-red-500 text-white w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FF0000] hover:scale-105 transition font-silkscreen relative z-10"
+            >
+              Logout
+            </button>
+            <img
+              src={currentUser.photoURL || defaultAvatar}
+              onClick={() => {
+                navigate("/profile");
+                setMenuOpen(false);
+              }}
+              alt="profile"
+              className="w-12 h-12 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
+            />
+          </>
+        ) : (
+          // If user is logged out:
+          <button
+            onClick={() => {
+              navigate("/login");
+              setMenuOpen(false);
+            }}
+            className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
+          >
+            Login
+          </button>
+        )}
       </div>
     </nav>
   );
