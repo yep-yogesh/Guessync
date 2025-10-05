@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react"; // hamburger + close icons
 import avatar from "/avatars/1.png";
@@ -6,6 +6,7 @@ import avatar from "/avatars/1.png";
 export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navItems = [
     { label: "Home", path: "/landing" },
@@ -13,6 +14,23 @@ export default function Navbar() {
     { label: "About Dev", path: "/about" },
     { label: "How to Play", path: "/how-to-play" },
   ];
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleAuthAction = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setIsLoggedIn(false);
+      navigate("/login");
+    } else {
+      navigate("/login");
+    }
+    setMenuOpen(false); // close mobile menu if open
+  };
 
   return (
     <nav className="w-full bg-black text-white font-montserrat shadow-md relative z-50">
@@ -41,18 +59,20 @@ export default function Navbar() {
           ))}
 
           <button
-            onClick={() => navigate("/login")}
+            onClick={handleAuthAction}
             className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
           >
-            Login
+            {isLoggedIn ? "Logout" : "Login"}
           </button>
 
-          <img
-            src={avatar}
-            onClick={() => navigate("/profile")}
-            alt="profile"
-            className="w-10 h-10 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
-          />
+          {isLoggedIn && (
+            <img
+              src={avatar}
+              onClick={() => navigate("/profile")}
+              alt="profile"
+              className="w-10 h-10 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
+            />
+          )}
         </div>
 
         {/* Mobile Hamburger */}
@@ -88,24 +108,23 @@ export default function Navbar() {
         ))}
 
         <button
-          onClick={() => {
-            navigate("/login");
-            setMenuOpen(false);
-          }}
+          onClick={handleAuthAction}
           className="bg-[#FFFB00] text-black w-32 px-4 py-2 rounded-[6px] shadow-[0_0_10px_#FFFB00] hover:scale-105 transition font-silkscreen relative z-10"
         >
-          Login
+          {isLoggedIn ? "Logout" : "Login"}
         </button>
 
-        <img
-          src={avatar}
-          onClick={() => {
-            navigate("/profile");
-            setMenuOpen(false);
-          }}
-          alt="profile"
-          className="w-12 h-12 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
-        />
+        {isLoggedIn && (
+          <img
+            src={avatar}
+            onClick={() => {
+              navigate("/profile");
+              setMenuOpen(false);
+            }}
+            alt="profile"
+            className="w-12 h-12 rounded-full border-[2px] border-[#FFFB00] shadow-[0_0_10px_#FFFB00] cursor-pointer relative z-10"
+          />
+        )}
       </div>
     </nav>
   );
