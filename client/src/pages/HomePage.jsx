@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRightToBracket,
@@ -140,6 +140,13 @@ const HomePage = () => {
     animation: "morph 8s infinite alternate ease-in-out",
   };
 
+  // Smooth redirect: if session token exists, go straight to /landing
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  if (token) {
+    return <Navigate to="/landing" replace />;
+  }
+
   return (
     <div
       className="relative w-full h-screen overflow-hidden bg-black text-white flex flex-col justify-center items-center px-4 sm:px-6 md:px-10"
@@ -214,23 +221,23 @@ const HomePage = () => {
           <br className="hidden sm:block" />
           Play with friends, guess songs in seconds, and race to the top of the leaderboard.
         </p>
-<div className="flex flex-wrap justify-center items-center gap-3 mt-4">
-  <div className="skill-box hover-trigger">
-    <span className="skill-name">Listen</span>
-    <FontAwesomeIcon icon={faEarListen} className="skill-icon" />
-  </div>
-  <div className="skill-box hover-trigger">
-    <span className="skill-name">Guess</span>
-    <FontAwesomeIcon icon={faBolt} className="skill-icon" />
-  </div>
-  <div className="skill-box hover-trigger">
-    <span className="skill-name">Win</span>
-    <FontAwesomeIcon icon={faTrophy} className="skill-icon" />
-  </div>
-</div>
+        <div className="flex flex-wrap justify-center items-center gap-3 mt-4">
+          <div className="skill-box hover-trigger">
+            <span className="skill-name">Listen</span>
+            <FontAwesomeIcon icon={faEarListen} className="skill-icon" />
+          </div>
+          <div className="skill-box hover-trigger">
+            <span className="skill-name">Guess</span>
+            <FontAwesomeIcon icon={faBolt} className="skill-icon" />
+          </div>
+          <div className="skill-box hover-trigger">
+            <span className="skill-name">Win</span>
+            <FontAwesomeIcon icon={faTrophy} className="skill-icon" />
+          </div>
+        </div>
 
-<style>
-  {`
+        <style>
+          {`
     /* Default skill-box styles (desktop hover works as before) */
     .skill-box {
       background-color: rgba(255, 255, 255, 0.09);
@@ -294,8 +301,7 @@ const HomePage = () => {
       }
     }
   `}
-</style>
-
+        </style>
 
         {/* Login Button */}
         <div className="flex justify-center items-center w-full mt-8 sm:mt-10">
