@@ -19,7 +19,7 @@ const socketHandler = (io) => {
 
     socket.on("join-room", async ({ roomCode, user }) => {
       try {
-        await socket.join(roomCode);
+        roomCode = String(roomCode);
         console.log(`${socket.id} joined room ${roomCode}`);
 
         let room = await Room.findOne({ code: roomCode });
@@ -35,6 +35,8 @@ const socketHandler = (io) => {
           console.log(`+ ${user.name} added to room ${roomCode}`);
         }
 
+        await socket.join(roomCode);
+
         process.nextTick(() => {
           io.to(roomCode).emit("room-updated", {
             players: room.players,
@@ -48,6 +50,7 @@ const socketHandler = (io) => {
 
     socket.on("start-game", async ({ roomCode }) => {
       try {
+        roomCode = String(roomCode);
         const room = await Room.findOne({ code: roomCode });
         if (!room) return;
 
@@ -70,6 +73,8 @@ const socketHandler = (io) => {
 
     socket.on("submit-guess", async ({ roomCode, user, text }) => {
       try {
+        roomCode = String(roomCode);
+
         const room = await Room.findOne({ code: roomCode });
         if (!room || !room.isActive) return;
 
@@ -101,6 +106,7 @@ const socketHandler = (io) => {
 
     socket.on("vote-hint", async ({ roomCode, uid, hintType }) => {
       try {
+        roomCode = String(roomCode);
         const room = await Room.findOne({ code: roomCode });
         if (!room || !room.isActive) return;
 
@@ -141,6 +147,7 @@ const socketHandler = (io) => {
 
 const startRound = async (roomCode, io) => {
   try {
+    roomCode = String(roomCode);
     const room = await Room.findOne({ code: roomCode });
     if (!room) return;
 
@@ -166,6 +173,7 @@ const startRound = async (roomCode, io) => {
 
 const endRound = async (roomCode, io) => {
   try {
+    roomCode = String(roomCode);
     const room = await Room.findOne({ code: roomCode });
     if (!room) return;
 
@@ -198,6 +206,7 @@ const endRound = async (roomCode, io) => {
 
 const nextRound = async (roomCode, io) => {
   try {
+    roomCode = String(roomCode);
     const room = await Room.findOne({ code: roomCode });
     if (!room) return;
 

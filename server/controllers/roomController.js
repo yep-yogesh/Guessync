@@ -77,7 +77,6 @@ export const joinRoom = async (req, res) => {
     room.players.push({ uid, name, avatar });
     await room.save();
 
-    
     console.log("Player added to room and saved.");
     res.json({ message: "Joined room", room });
   } catch (err) {

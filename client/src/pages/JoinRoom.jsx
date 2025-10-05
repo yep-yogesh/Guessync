@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import socket from "../socket";
+import { auth } from "../config/firebase"; // <-- add
 
 export default function JoinRoom() {
   const [code, setCode] = useState("");
@@ -35,38 +36,57 @@ export default function JoinRoom() {
     setActiveButton("join");
     setTimeout(() => setActiveButton(null), 150);
 
-    const token = localStorage.getItem("token");
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      setError("Session expired. Please log in again.");
+      navigate("/login");
+      return;
+    }
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const getToken = async (force = false) => {
+      const t = await currentUser.getIdToken(force);
+      localStorage.setItem("token", t);
+      return t;
+    };
+
+    const token = await getToken();
+    const storedUser = JSON.parse(localStorage.getItem("user")) || {
+      name: currentUser.displayName || "Player",
+      uid: currentUser.uid,
+      avatar: localStorage.getItem("userAvatar") || currentUser.photoURL || "/avatars/1.png",
+    };
 
     try {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
+      const doFetch = async (tok) =>
+        fetch("https://guessync.onrender.com/api/room/join", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${tok}`,
+          },
+          body: JSON.stringify({
+            code,
+            uid: storedUser.uid,
+            name: storedUser.name,
+            avatar: storedUser.avatar,
+          }),
+        });
 
-      const res = await fetch("https://guessync.onrender.com/api/room/join", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          code,
-          uid: user.uid,
-          name: user.name,
-          avatar: user.avatar,
-        }),
-      });
+      let res = await doFetch(token);
+      if (res.status === 401 || res.status === 403) {
+        const refreshed = await getToken(true);
+        res = await doFetch(refreshed);
+      }
 
       const data = await res.json();
 
       if (res.ok) {
         localStorage.setItem("room", JSON.stringify(data.room));
 
-        socket.auth = { uid: user.uid };
-        if (socket.disconnected) {
-          socket.connect();
-        }
+        socket.auth = { uid: storedUser.uid };
+        if (socket.disconnected) socket.connect();
 
-        socket.emit("join-room", { roomCode: code, user });
+        socket.emit("join-room", { roomCode: code, user: storedUser });
 
         socket.once("room-updated", () => {
           navigate("/waiting-room");
