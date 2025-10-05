@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import socket from "../socket";
 import sendIcon from "../assets/send.png";
 import spotcon from "../assets/spotify.png";
+import { auth } from "../config/firebase"; // <-- add
 
 
 const DEFAULT_PLAYLISTS = {
@@ -128,17 +129,27 @@ const CreateRoom = () => {
   };
 
   const handleCreateRoom = async () => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!token || !user) {
+    // const token = localStorage.getItem("token");
+    // const user = JSON.parse(localStorage.getItem("user"));
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
       alert("Please log in first!");
+      navigate("/login");
       return;
     }
-    if (isCreating) return; // prevent multiple clicks
-    setIsCreating(true);
 
-    socket.auth = { uid: user.uid };
-    socket.connect();
+    const getToken = async (force = false) => {
+      const t = await currentUser.getIdToken(force);
+      localStorage.setItem("token", t); // keep localStorage in sync for other consumers
+      return t;
+    };
+
+    const storedUser = JSON.parse(localStorage.getItem("user")) || {
+      name: currentUser.displayName || "Player",
+      uid: currentUser.uid,
+      avatar: localStorage.getItem("userAvatar") || currentUser.photoURL || "/avatars/1.png",
+    };
+    const token = await getToken();
 
     let playlistId = null;
     let useSpotify = false;
@@ -171,9 +182,9 @@ const CreateRoom = () => {
 
     async function sendRequest() {
       const payload = {
-        uid: user.uid,
-        name: user.name,
-        avatar: user.avatar || "https://i.imgur.com/placeholder.png",
+        uid: storedUser.uid,
+        name: storedUser.name,
+        avatar: storedUser.avatar || "https://i.imgur.com/placeholder.png",
         useSpotify,
         playlistId,
         players,
@@ -185,27 +196,37 @@ const CreateRoom = () => {
       };
 
       try {
-        const res = await fetch("https://guessync.onrender.com/api/room/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        });
+        const doFetch = async (tok) =>
+          fetch("https://guessync.onrender.com/api/room/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${tok}`,
+            },
+            body: JSON.stringify(payload),
+          });
+
+        let res = await doFetch(token);
+        if (res.status === 401 || res.status === 403) {
+          const refreshed = await getToken(true);
+          res = await doFetch(refreshed);
+        }
+
         const data = await res.json();
 
         if (res.ok) {
           const room = {
             code: data.code,
-            hostUID: user.uid,
-            players: [{ uid: user.uid, name: user.name, avatar: user.avatar }],
+            hostUID: storedUser.uid,
+            players: [{ uid: storedUser.uid, name: storedUser.name, avatar: storedUser.avatar }],
           };
           localStorage.setItem("room", JSON.stringify(room));
-          socket.emit("join-room", { roomCode: data.code, user });
+          socket.auth = { uid: storedUser.uid };
+          if (socket.disconnected) socket.connect();
+          socket.emit("join-room", { roomCode: data.code, user: storedUser });
           navigate("/waiting-room");
         } else {
-          alert("❌ Failed to create room: " + data.message);
+          alert("❌ Failed to create room: " + (data.message || "Unauthorized"));
           setIsCreating(false);
         }
       } catch (err) {
