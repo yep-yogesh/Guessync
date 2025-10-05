@@ -17,18 +17,22 @@ export default function Navbar() {
   return (
     <nav className="w-full bg-black text-white font-montserrat shadow-md relative z-50">
       <div className="flex items-center justify-between px-6 py-4">
-        {/* Logo */}
-        <div className="flex items-center">
-          <img src="/logo.png" alt="logo" className="w-10 h-10 mt-1.5" />
-          <h1 className="ml-2 text-2xl font-silkscreen">
-            GUES
-            <span className="text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]">
-              SYNC
-            </span>
-          </h1>
-        </div>
+          <div className="flex items-center">
+            <button 
+              className="flex items-center"
+              onClick={() => navigate("/landing")}
+            >
+            <img src="/logo.png" alt="logo" className="w-10 h-10" />
+            <h1 className="ml-2 text-2xl font-silkscreen">
+              GUES
+              <span className="text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]">
+                SYNC
+              </span>
+            </h1>
+            </button>
+          </div>
 
-        {/* Desktop Menu */}
+          {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8 text-lg font-medium">
           {navItems.map((item) => (
             <button
