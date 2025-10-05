@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Footer from "../components/common/Footer";
 import {
   faRightToBracket,
   faEarListen,
@@ -149,7 +150,7 @@ const HomePage = () => {
 
   return (
     <div
-      className="relative w-full h-screen overflow-hidden bg-black text-white flex flex-col justify-center items-center px-4 sm:px-6 md:px-10"
+      className="relative w-full bg-black text-white flex flex-col"
       ref={containerRef}
     >
       <style>
@@ -190,8 +191,8 @@ const HomePage = () => {
         />
       ))}
 
-      {/* Main Content */}
-      <div className="z-10 text-center space-y-6 w-full">
+      {/* Main Content - Full viewport height */}
+      <div className="min-h-screen z-10 text-center space-y-6 w-full flex flex-col justify-center items-center px-4 sm:px-6 md:px-10">
         {/* Logo + Title */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
           <img
@@ -314,6 +315,7 @@ const HomePage = () => {
           </button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

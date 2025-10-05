@@ -1,5 +1,6 @@
 // Added by Reshma - How To Play Page
 import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 import { useEffect, useState } from "react";
 
 const HowToPlay = () => {
@@ -217,6 +218,7 @@ const HowToPlay = () => {
           </div>
         </section>
       </div>
+      <Footer />
     </div>
   );
 };

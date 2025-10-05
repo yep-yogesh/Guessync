@@ -5,6 +5,7 @@ import googleIcon from "../assets/google.svg";
 import { auth, provider } from "../config/firebase";
 import AvatarGrid from "../components/common/AvatarGrid";
 import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -192,6 +193,7 @@ const Login = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

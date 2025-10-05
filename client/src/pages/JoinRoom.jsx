@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
+import Footer from "../components/common/Footer";
 import socket from "../socket";
 import { auth } from "../config/firebase"; // <-- add
 
@@ -188,6 +189,7 @@ return (
         </p>
       </div>
     </div>
+    <Footer />
   </div>
 );
 
