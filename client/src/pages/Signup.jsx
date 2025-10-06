@@ -32,7 +32,11 @@ const Signup = () => {
     if (!validateFields()) return;
 
     try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       await updateProfile(result.user, { displayName: name });
       const token = await result.user.getIdToken();
 
@@ -212,7 +216,8 @@ const Signup = () => {
           <AvatarGrid
             selected={selectedAvatar}
             onSelect={(avatar) => {
-              setSelectedAvatar(avatar);
+              if (selectedAvatar) setSelectedAvatar(null);
+              else setSelectedAvatar(avatar);
               setErrors((prev) => ({ ...prev, avatar: null }));
             }}
           />
