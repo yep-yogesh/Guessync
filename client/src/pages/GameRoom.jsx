@@ -327,7 +327,7 @@ const GameRoom = () => {
               </span>
             ),
           },
-        ]);        
+        ]);       
       }
     });
 
@@ -475,60 +475,55 @@ const GameRoom = () => {
     return <LoadingOverlay text="Starting Game..." />;
   }
 
-if (gameOver) {
-  return (
-    <div className="h-screen bg-black text-white">
-      <Navbar />
-
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-4rem)]">
-        <h2 className="text-3xl font-bold mb-8">Game Over!</h2>
-
-        <div className="w-64 bg-[#1a1a1ab8] rounded-[20px] p-6 shadow-2xl">
-          <h3 className="text-xl ml-5 mb-4 text-[#FFFB00] font-silkscreen glow-yellow">
-            LEADERBOARD
-          </h3>
-          {leaderboard.map((p, i) => (
-            <div key={i} className="flex justify-between mb-2 items-center">
-              <div className="flex items-center">
-                <div className="w-6 h-6 bg-[#2d2d2d69] rounded-full mr-2"></div>
-                <span className={p.uid === user.uid ? "text-[#FFFB00]" : ""}>
-                  {p.name}
-                </span>
+  if (gameOver) {
+    return (
+      <div className="h-screen bg-black text-white">
+        <Navbar />
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-4rem)] p-4">
+          <h2 className="text-3xl font-bold mb-8">Game Over!</h2>
+          <div className="w-full max-w-sm sm:w-64 bg-[#1a1a1ab8] rounded-[20px] p-6 shadow-2xl">
+            <h3 className="text-xl text-center sm:text-left sm:ml-5 mb-4 text-[#FFFB00] font-silkscreen glow-yellow">
+              LEADERBOARD
+            </h3>
+            {leaderboard.map((p, i) => (
+              <div key={i} className="flex justify-between mb-2 items-center">
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-[#2d2d2d69] rounded-full mr-2"></div>
+                  <span className={p.uid === user.uid ? "text-[#FFFB00]" : ""}>
+                    {p.name}
+                  </span>
+                </div>
+                <span className="font-bold text-[#FFFB00]">{p.score} pts</span>
               </div>
-              <span className="font-bold text-[#FFFB00]">{p.score} pts</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 flex gap-10">
-          <a
-            href="/landing"
-            className="border-2 border-[#FFFB00] text-white font-bold py-2 px-6 rounded-xl hover:scale-105 transition-transform"
-          >
-            Go to Home
-          </a>
-          <a
-            href="/create-room"
-            className="bg-[#FFFB00] text-black font-bold py-2 px-6 rounded-xl hover:scale-105 transition-transform"
-          >
-            Play Again
-          </a>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 sm:gap-10">
+            <a
+              href="/landing"
+              className="border-2 border-[#FFFB00] text-white font-bold py-2 px-6 rounded-xl hover:scale-105 transition-transform text-center"
+            >
+              Go to Home
+            </a>
+            <a
+              href="/create-room"
+              className="bg-[#FFFB00] text-black font-bold py-2 px-6 rounded-xl hover:scale-105 transition-transform text-center"
+            >
+              Play Again
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-
+    );
+  }
 
   return (
-    <div className="h-screen w-screen bg-black text-white pt-5.5 flex overflow-hidden font-montserrat">
-      <div className="w-1/4 h-full mr-0.5 ml-2 mt-3 mb-3 bg-[#1a1a1ab8] p-6 flex flex-col rounded-[20px] shadow-2xl overflow-hidden">
+    <div className="min-h-screen lg:h-screen w-screen bg-black text-white flex flex-col lg:flex-row lg:overflow-hidden font-montserrat lg:pt-5.5 p-2 lg:px-2 lg:gap-x-3">
+      <div className="w-full lg:w-1/4 lg:h-full order-3 lg:order-1 bg-[#1a1a1ab8] p-4 lg:p-6 flex flex-col rounded-[20px] shadow-2xl lg:my-3 lg:overflow-hidden">
         <div className="mb-8">
           <h2 className="font-silkscreen text-[#FFFB00] text-xl mb-4 glow-yellow">
             LEADERBOARD 
           </h2>
-          <div className="space-y-3 overflow-y-auto max-h-[40vh] pr-2">
+          <div className="space-y-3 overflow-y-auto max-h-[30vh] lg:max-h-[40vh] pr-2">
             {players
               .sort((a, b) => (b.score || 0) - (a.score || 0))
               .map((p, i) => (
@@ -580,7 +575,7 @@ if (gameOver) {
                   key={type}
                   onClick={() => handleVote(type)}
                   disabled={hintsUsed[type] || roundEnded}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-300 ${
+                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-300 text-sm lg:text-base ${
                     voteCounts[type] > 0
                       ? "bg-[#FFFB00] text-black shadow-glow-yellow"
                       : hintsUsed[type] || roundEnded
@@ -594,7 +589,7 @@ if (gameOver) {
                       alt={`${type} icon`}
                       className="w-5 h-5 object-contain"
                     />
-                    <span>{labels[type]}</span>
+                    <span className="text-left">{labels[type]}</span>
                   </span>
                   {voteCounts[type] > 0 && (
                     <span className="text-xs px-2 py-0.5 bg-[#ffffff] rounded-md text-black font-bold">
@@ -608,7 +603,7 @@ if (gameOver) {
         </div>
       </div>
 
-      <div className="w-2/4 h-full mr-2.5 ml-2.5 mt-3 mb-3 flex flex-col rounded-[20px] items-center justify-center relative overflow-hidden">
+      <div className="w-full lg:w-2/4 lg:h-full order-1 lg:order-2 flex flex-col rounded-[20px] items-center justify-center relative overflow-hidden my-4 lg:my-3 p-4 lg:p-0">
         <canvas
           ref={blobCanvasRef}
           className="absolute top-0 left-0 w-full h-full z-0 opacity-70 mix-blend-screen"
@@ -617,39 +612,35 @@ if (gameOver) {
 
         <div className="relative z-10 w-full flex flex-col items-center">
           {showPlayButton && (
-<div className="absolute inset-0 flex items-center justify-center z-20">
-  <button
-    onClick={handlePlayFirstSong}
-    className="mt-[40px] bg-[#FFFB00] hover:bg-[#FFFB00CC] text-black px-4 py-2 rounded-md text-[10px] font-bold shadow-[0_0_10px_3px_rgba(255,251,0,0.4)] transition-all"
-  >
-    PLAY SONG
-  </button>
-</div>
-)}
+            <div className="absolute inset-0 flex items-center justify-center z-20">
+              <button
+                onClick={handlePlayFirstSong}
+                className="mt-[40px] bg-[#FFFB00] hover:bg-[#FFFB00CC] text-black px-4 py-2 rounded-md text-[10px] font-bold shadow-[0_0_10px_3px_rgba(255,251,0,0.4)] transition-all"
+              >
+                PLAY SONG
+              </button>
+            </div>
+          )}
 
           <div className="bg-[#000000AA]/45 px-6 py-2 rounded-md mb-6">
-            <h2 className="text-[#FFFB00] text-xl font-bold">
+            <h2 className="text-[#FFFB00] text-xl font-bold text-center">
               {roundEnded
                 ? `Round Over - Next in ${countdown}s`
                 : `Round ${round} - ${timer}s left`}
             </h2>
-
           </div>
-<div
-  className={`bg-[#2D2D2D]/45 p-4 rounded-lg mb-5 transition-all duration-500 text-center ${
-    roundEnded ? "" : "filter blur-md"
-  }`}
->
-  <div className="flex justify-center items-center space-x-2 text-[#FFFB00]">
-    <img src="/film.png" alt="Movie" className="w-4 h-4" />
-    <span>
-      {roundEnded ? `${song.song}` : "Hidden"}
-      {/* {roundEnded && (
-        <span className="text-white italic">{song.movie}</span>
-      )} */}
-    </span>
-  </div>
-</div>
+          <div
+            className={`bg-[#2D2D2D]/45 p-4 rounded-lg mb-5 transition-all duration-500 text-center ${
+              roundEnded ? "" : "filter blur-md"
+            }`}
+          >
+            <div className="flex justify-center items-center space-x-2 text-[#FFFB00]">
+              <img src="/film.png" alt="Movie" className="w-4 h-4" />
+              <span>
+                {roundEnded ? `${song.song}` : "Hidden"}
+              </span>
+            </div>
+          </div>
 
           <div className="relative mb-8 group">
             <div
@@ -659,7 +650,7 @@ if (gameOver) {
             >
               <img
                 src={song?.cover}
-                className="w-[180px] h-[180px] object-cover grayscale"
+                className="w-[150px] h-[150px] lg:w-[180px] lg:h-[180px] object-cover grayscale"
                 alt="Blurred cover"
               />
             </div>
@@ -667,7 +658,7 @@ if (gameOver) {
               src={song?.cover}
               alt="Album cover"
               crossOrigin="anonymous"
-              className={`w-[180px] h-[180px] object-cover shadow-2xl rounded-md transition-all duration-500 ${
+              className={`w-[150px] h-[150px] lg:w-[180px] lg:h-[180px] object-cover shadow-2xl rounded-md transition-all duration-500 ${
                 hintRevealed.cover ? "grayscale-0 blur-0" : "grayscale blur-md"
               }`}
             />
@@ -682,17 +673,15 @@ if (gameOver) {
             >
               <div className="flex items-center space-x-2 text-[#FFFB00]">
                 <img src="/film.png" alt="Movie" className="w-4 h-4" />
-<span>
-  {hintRevealed.movie
-    ? song.movie
-        .replace(/\s*[\--]?\s*\(.*?(original motion picture soundtrack|ost|from.*?)\)/gi, "") // remove entire (Original Motion Picture Soundtrack)
-        .replace(/\s*[\--]?\s*(original motion picture soundtrack|ost|from.*)/gi, "") // fallback for non-parentheses versions
-        .replace(/\s*\)+$/, "") // remove leftover closing parenthesis
-        .trim()
-    : "Hidden"}
-</span>
-
-
+                <span>
+                  {hintRevealed.movie
+                    ? song.movie
+                        .replace(/\s*[\--]?\s*\(.*?(original motion picture soundtrack|ost|from.*?)\)/gi, "") // remove entire (Original Motion Picture Soundtrack)
+                        .replace(/\s*[\--]?\s*(original motion picture soundtrack|ost|from.*)/gi, "") // fallback for non-parentheses versions
+                        .replace(/\s*\)+$/, "") // remove leftover closing parenthesis
+                        .trim()
+                    : "Hidden"}
+                </span>
               </div>
             </div>
 
@@ -718,19 +707,19 @@ if (gameOver) {
         </div>
       </div>
 
-      <div className="w-1/4 h-full mr-2 ml-0.5 mt-3 mb-3 bg-[#1a1a1ab8] p-6 flex flex-col rounded-[20px] shadow-2xl overflow-hidden">
+      <div className="w-full lg:w-1/4 lg:h-full order-2 lg:order-3 bg-[#1a1a1ab8] p-4 lg:p-6 flex flex-col rounded-[20px] shadow-2xl lg:my-3 lg:overflow-hidden">
         <h2 className="font-silkscreen text-[#FFFB00] text-xl mb-4 border-b border-[#FFFB0030] pb-2 glow-yellow">
           GUESS — BOX
         </h2>
 
-        <div className="flex-1 overflow-y-auto pr-2 space-y-3 mb-4">
+        <div className="flex-1 overflow-y-auto pr-2 space-y-3 mb-4 min-h-[20vh] lg:min-h-0">
           {chat.map((message, i) => (
             <div
               key={i}
-              className={`p-3 rounded-lg ${
+              className={`p-3 rounded-lg text-sm lg:text-base ${
                 message.system
-                ? message.type === "crct-guess"
-                  ? "text-green-400 border border-green-400 bg-green-400/10 shadow-[0_0_10px_2px_rgba(34,197,94,0.5)]"             
+                  ? message.type === "crct-guess"
+                    ? "text-green-400 border border-green-400 bg-green-400/10 shadow-[0_0_10px_2px_rgba(34,197,94,0.5)]"
                     : message.type === "ai-hint"
                     ? "text-purple-300 italic bg-[#2D2D2D]"
                     : "text-gray-400 italic"
