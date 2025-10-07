@@ -135,6 +135,9 @@ const CreateRoom = () => {
       return;
     }
 
+    // show lazy loader immediately after auth check
+    setIsCreating(true);
+
     const getToken = async (force = false) => {
       const t = await currentUser.getIdToken(force);
       localStorage.setItem("token", t); // keep localStorage in sync for other consumers

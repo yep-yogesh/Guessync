@@ -10,6 +10,29 @@ const WaitingRoom = () => {
   const [isMovingToGame, setIsMovingToGame] = useState(false);
   const navigate = useNavigate();
 
+  // Copy tooltip state for middle section
+  const [showCopyTip, setShowCopyTip] = useState(false);
+  const [copyTipText, setCopyTipText] = useState("Click to copy code");
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const tipTimeoutRef = useRef(null);
+  const showTip = (text, ms = 0) => {
+    if (tipTimeoutRef.current) clearTimeout(tipTimeoutRef.current);
+    setCopyTipText(text);
+    setShowCopyTip(true);
+    if (ms > 0) {
+      tipTimeoutRef.current = setTimeout(() => {
+        setCopyTipText("Click to copy code");
+        setShowCopyTip(false);
+      }, ms);
+    }
+  };
+
+  // Arrival glow state for new players
+  const [arrivalGlow, setArrivalGlow] = useState({});
+  const arrivalTimersRef = useRef({});
+  const prevPlayersRef = useRef(new Set());
+  const firstUpdateRef = useRef(true);
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     const roomData = JSON.parse(localStorage.getItem("room"));
@@ -35,6 +58,34 @@ const WaitingRoom = () => {
     }
 
     socket.on("room-updated", (data) => {
+      const incomingSet = new Set(data.players.map((p) => p.uid));
+      if (firstUpdateRef.current) {
+        firstUpdateRef.current = false;
+        prevPlayersRef.current = incomingSet;
+        setPlayers(data.players);
+        return;
+      }
+      // Detect new players
+      const newOnes = data.players.filter((p) => !prevPlayersRef.current.has(p.uid));
+      if (newOnes.length) {
+        setArrivalGlow((old) => {
+          const next = { ...old };
+          newOnes.forEach((p) => {
+            next[p.uid] = true;
+            if (arrivalTimersRef.current[p.uid]) clearTimeout(arrivalTimersRef.current[p.uid]);
+            arrivalTimersRef.current[p.uid] = setTimeout(() => {
+              setArrivalGlow((curr) => {
+                const n = { ...curr };
+                delete n[p.uid];
+                return n;
+              });
+              delete arrivalTimersRef.current[p.uid];
+            }, 1200);
+          });
+          return next;
+        });
+      }
+      prevPlayersRef.current = incomingSet;
       setPlayers(data.players);
     });
 
@@ -47,6 +98,9 @@ const WaitingRoom = () => {
       socket.off("room-updated");
       socket.off("move-to-game-room");
       socket.off("connect");
+      Object.values(arrivalTimersRef.current).forEach((t) => clearTimeout(t));
+      arrivalTimersRef.current = {};
+      if (tipTimeoutRef.current) clearTimeout(tipTimeoutRef.current);
     };
   }, [navigate]);
 
@@ -135,27 +189,38 @@ const WaitingRoom = () => {
 
   return (
     <div className="h-screen w-full bg-black text-white flex flex-col lg:flex-row overflow-hidden font-silkscreen p-2 sm:p-4 gap-2 sm:gap-3 lg:gap-4">
+      {/* Floating copy tooltip */}
+      {showCopyTip && (
+        <div
+          className="fixed z-50 pointer-events-none bg-[#FFFB00] text-black border-2 border-black px-2 py-1 rounded text-xs shadow-[0_0_10px_#FFFB00]"
+          style={{ left: mousePos.x + 12, top: mousePos.y - 24 }}
+        >
+          {copyTipText}
+        </div>
+      )}
+
       {/* Players Section */}
-      <div className="w-full lg:w-[22%] bg-[#1a1a1ab8] rounded-xl p-3 sm:p-4 lg:p-5 flex flex-col order-1 lg:order-none h-[30%] lg:h-full">
+      <div className="w-full lg:w-[22%] bg-[#1a1a1ab8] rounded-xl p-3 sm:p-4 lg:p-5 flex flex-col order-1 lg:order-none h-[45vh] lg:h-full overflow-hidden">
         <div className="flex-1">
           <h2 className="text-white text-base sm:text-lg lg:text-xl mb-2">Players ({players.length})</h2>
-          <ul className="space-y-1 sm:space-y-2 lg:space-y-3 max-h-[80%] lg:max-h-none overflow-y-auto custom-scrollbar">
+          <ul className="h-full overflow-y-auto custom-scrollbar space-y-1 sm:space-y-2 lg:space-y-3">
             {players.map((p) => (
-              <li key={p.uid} className="flex items-center gap-2 bg-[#2d2d2d58] p-2 rounded-lg">
+              <li
+                key={p.uid}
+                className={`flex items-center gap-2 bg-[#2d2d2d58] p-2 rounded-lg transition-all duration-300 ${
+                  arrivalGlow[p.uid] ? "animate-neon-punch ring-2 ring-[#FFFB00]/70 shadow-[0_0_18px_#FFFB00]" : ""
+                }`}
+              >
                 <img
                   src={getAvatarSrc(p.avatar)}
                   alt={p.name}
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 rounded-sm"
                   onError={(e) => { e.currentTarget.src = "/avatars/1.png"; }}
                 />
-                <span className={`text-xs sm:text-sm lg:text-base ${p.uid === currentUID ? "text-yellow-400" : ""}`}>
+                <span className={`text-xs sm:text-sm lg:text-base ${p.uid === currentUID ? "text-[#FFFB00]" : ""}`}>
                   {p.name}
                   {p.uid === hostUID && (
-                    <i
-                      className="fa-solid fa-crown text-yellow-400 ml-3"
-                      aria-label="Host"
-                      title="Host"
-                    />
+                    <i className="fa-solid fa-crown text-[#FFFB00] ml-3" aria-label="Host" title="Host" />
                   )}
                 </span>
               </li>
@@ -166,7 +231,7 @@ const WaitingRoom = () => {
         {isHost && (
           <button
             onClick={handleStartGame}
-            className="mt-2 sm:mt-3 lg:mt-4 py-2 sm:py-2 lg:py-3 rounded-md font-bold bg-[#FFFB00] text-black hover:brightness-110 shadow-yellow-400 shadow-md text-xs sm:text-sm lg:text-base"
+            className="mt-2 sm:mt-3 lg:mt-4 py-2 sm:py-2 lg:py-3 rounded-md font-bold bg-[#FFFB00] text-black hover:brightness-110 shadow-[0_0_10px_#FFFB00] text-xs sm:text-sm lg:text-base"
           >
             START GAME
           </button>
@@ -174,15 +239,34 @@ const WaitingRoom = () => {
       </div>
 
       {/* Main Waiting Room Section */}
-      <div className="w-full lg:w-[56%] bg-[#1a1a1ab8] rounded-xl flex flex-col items-center justify-center order-2 lg:order-none h-[40%] lg:h-full">
+      <div
+        className="w-full lg:w-[56%] bg-[#1a1a1ab8] rounded-xl flex flex-col items-center justify-center order-2 lg:order-none h-[40%] lg:h-full cursor-pointer"
+        onMouseEnter={() => showTip("Click to copy code")}
+        onMouseLeave={() => setShowCopyTip(false)}
+        onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
+        onClick={async () => {
+          try {
+            if (roomCode) {
+              await navigator.clipboard.writeText(String(roomCode));
+              showTip("Copied!", 900);
+            }
+          } catch {
+            showTip("Copy failed", 1200);
+          }
+        }}
+      >
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 sm:mb-4 text-center">Waiting Room</h1>
         <p className="text-gray-300 text-sm sm:text-base lg:text-lg mb-2 text-center px-4">
           Room Code: <span className="text-white font-mono text-base sm:text-lg lg:text-xl">{roomCode}</span>
         </p>
         {!isHost && (
-          <p className="mt-3 sm:mt-4 lg:mt-6 text-yellow-400 text-center text-sm sm:text-base lg:text-lg px-4">
-            ⏳ Waiting for host to start the game...
-          </p>
+          <div className="mt-3 sm:mt-4 lg:mt-6 text-[#FFFB00] text-center text-sm sm:text-base lg:text-lg px-4 flex items-center justify-center gap-2">
+            <span
+              className="inline-block w-4 h-4 sm:w-5 sm:h-5 border-2 border-[#FFFB00] border-t-transparent rounded-full animate-spin drop-shadow-[0_0_6px_#FFFB00]"
+              aria-hidden="true"
+            />
+            <span>Waiting for host to start the game...</span>
+          </div>
         )}
       </div>
 
@@ -193,6 +277,18 @@ const WaitingRoom = () => {
           <p className="text-gray-400 italic text-xs sm:text-xs lg:text-sm">System: Waiting for game to start...</p>
         </div>
       </div>
+
+      {/* Neon punch animation style */}
+      <style>{`
+        @keyframes neonPunch {
+          0% { box-shadow: 0 0 0 transparent; transform: scale(0.98); background-color: rgba(255, 251, 0, 0.10); }
+          40% { box-shadow: 0 0 18px #FFFB00; transform: scale(1.01); background-color: rgba(255, 251, 0, 0.14); }
+          100% { box-shadow: 0 0 0 transparent; transform: scale(1); background-color: rgba(45, 45, 45, 0.35); }
+        }
+        .animate-neon-punch {
+          animation: neonPunch 1.1s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
