@@ -15,7 +15,7 @@ const RoomSchema = new mongoose.Schema({
     movie: { type: Boolean, default: false },
     composer: { type: Boolean, default: false },
     cover: { type: Boolean, default: false },
-    ai: { type: Boolean, default: false } // ✅ Prevent reuse
+    ai: { type: Boolean, default: false }
   },
 
   players: [
@@ -27,12 +27,19 @@ const RoomSchema = new mongoose.Schema({
     }
   ],
 
+  // 👇 The change is inside this object
   settings: {
     rounds: Number,
     duration: Number,
     language: String,
+    // Move maxPlayers here
+    maxPlayers: {
+      type: Number,
+      required: true,
+      default: 12,
+    },
   },
-
+  
   playlist: [
     {
       song: String,
@@ -54,7 +61,7 @@ const RoomSchema = new mongoose.Schema({
     }
   ],
 
-  guessedCorrectlyThisRound: { type: [String], default: [] }, // ✅ NEW FIELD
+  guessedCorrectlyThisRound: { type: [String], default: [] },
   rules: { type: String, default: "" },
   isActive: { type: Boolean, default: false }
 

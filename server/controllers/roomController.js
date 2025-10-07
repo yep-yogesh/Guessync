@@ -12,10 +12,11 @@ export const createRoom = async (req, res) => {
     useSpotify,
     playlistId,
     code,
+    players, // 👇 ADD THIS: Get the player limit from the request
     rounds,
     duration,
     languages,
-    rules
+    rules,
   } = req.body;
 
   console.log("Creating room with code:", code);
@@ -26,7 +27,11 @@ export const createRoom = async (req, res) => {
 
     if (useSpotify && playlistId) {
       const accessToken = await getSpotifyAccessToken();
-      playlist = await getSongsFromSpotifyPlaylist(playlistId, accessToken,rounds);
+      playlist = await getSongsFromSpotifyPlaylist(
+        playlistId,
+        accessToken,
+        rounds
+      );
     } else {
       playlist = await Song.aggregate([{ $sample: { size: 10 } }]);
     }
@@ -35,16 +40,16 @@ export const createRoom = async (req, res) => {
       code,
       hostUID: uid,
       players: [{ uid, name, avatar }],
-settings: {
-  rounds,
-  duration,
-  language: req.body.language || "tamil",
-},
-
+      settings: {
+        rounds,
+        duration,
+        language: req.body.language || "tamil",
+        maxPlayers: players, // 👇 ADD THIS: Save the player limit to the database
+      },
       playlist,
-      rules
+      rules,
     });
-    
+
     console.log("Attempting to save new room...");
     await newRoom.save();
     console.log("Room saved to MongoDB successfully!");
@@ -72,6 +77,14 @@ export const joinRoom = async (req, res) => {
     if (alreadyInRoom) {
       console.warn("⚠️ Already in room");
       return res.status(400).json({ message: "Already joined" });
+    }
+
+    // 👇 ADD THIS BLOCK: Enforce the player limit
+    if (room.players.length >= room.settings.maxPlayers) {
+      console.warn(`Room ${code} is full. Rejecting join request from ${name}.`);
+      return res
+        .status(403)
+        .json({ message: "Room is full and cannot be joined." });
     }
 
     room.players.push({ uid, name, avatar });
@@ -107,7 +120,8 @@ export const updateRoom = async (req, res) => {
     console.log("Room updated successfully");
 
     res.status(200).json({ message: "Room updated", room });
-  } catch (err) {
+  } catch (err)
+  {
     console.error("Room update error:", err);
     res.status(500).json({ message: "Error updating room" });
   }
