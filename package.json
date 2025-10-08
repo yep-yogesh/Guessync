@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@octokit/rest": "^22.0.0",
+    "@pinecone-database/pinecone": "^6.1.2",
+    "dotenv": "^17.2.3",
+    "node-fetch": "^3.3.2"
+  }
+}

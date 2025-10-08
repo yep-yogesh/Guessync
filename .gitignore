@@ -37,3 +37,5 @@ server/.DS_Store
 # Editor/IDE folders (optional but useful)
 server/.vscode/
 server/.idea/
+
+node_modules
