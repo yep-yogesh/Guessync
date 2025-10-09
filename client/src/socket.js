@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const socket = io("https://guessync.onrender.com/", {
+const socket = io(import.meta.env.VITE_SOCKET_URL || "https://guessync.onrender.com/", {
   autoConnect: false,
   reconnection: true,
   reconnectionAttempts: Infinity,

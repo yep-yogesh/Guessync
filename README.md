@@ -147,6 +147,38 @@ npm run dev
 
 ---
 
+## Docker Deployment
+
+To run the entire application using Docker Compose:
+
+### Prerequisites
+- Docker and Docker Compose installed
+- Same environment variables as local development
+
+### Setup
+1. Copy and configure environment file:
+   ```bash
+   cp server/.env.example server/.env
+   ```
+   Fill in the values as described in step 3 of Local Development.
+
+2. Build and run:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. Access the app:
+   - Frontend: http://localhost:3000
+   - Backend: http://localhost:5000
+   - MongoDB: localhost:27017
+
+4. Stop the containers:
+   ```bash
+   docker-compose down
+   ```
+
+---
+
 ## Common Issues & Troubleshooting
 
 - CORS error in browser console:
