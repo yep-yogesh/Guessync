@@ -17,11 +17,11 @@
     "@google/generative-ai": "^0.24.1",
     "@langchain/core": "^0.3.61",
     "@langchain/google-genai": "^0.2.13",
-    "axios": "^1.8.4",
+    "axios": "^1.9.0",         <-- UPDATED
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
-    "express-rate-limit": "^7.5.1",
+    "express-rate-limit": "^7.5.2", <-- UPDATED
     "firebase-admin": "^13.2.0",
     "fuse.js": "^7.1.0",
     "langchain": "^0.3.29",
@@ -34,6 +34,6 @@
     "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.10"       <-- UPDATED
   }
 }
