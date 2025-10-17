@@ -1,6 +1,6 @@
 // Added by Reshma - How To Play Page
-import Navbar from "../components/common/Navbar";
-import { useEffect, useState } from "react";
+import Navbar from"../components/common/Navbar";
+import { useEffect, useState } from"react";
 
 const HowToPlay = () => {
   const [visibleSteps, setVisibleSteps] = useState([]);
@@ -91,7 +91,7 @@ const HowToPlay = () => {
                 className="connector-line w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 rotate-90 sm:rotate-0"
               />
               <div className="step-icon relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 flex items-center justify-center">
-                <div className="absolute w-full h-full bg-white shadow-[0_0_30px_white] transition-all duration-300" />
+                <div className="absolute w-full h-full bg-white shadow-[0_0_30px_white] transition-all duration-300 hover:shadow-[0_0_40px_white]" />
                 <img
                   src="/howto/door.svg"
                   className="relative z-10 w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 transition-transform duration-300"
@@ -123,7 +123,7 @@ const HowToPlay = () => {
                 className="connector-line w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 rotate-90 sm:rotate-0"
               />
               <div className="step-icon relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 flex items-center justify-center">
-                <div className="absolute w-full h-full bg-white shadow-[0_0_30px_white] transition-all duration-300" />
+                <div className="absolute w-full h-full bg-white shadow-[0_0_30px_white] transition-all duration-300 hover:shadow-[0_0_40px_white]" />
                 <img
                   src="/howto/majesticons_music-line.svg"
                   className="relative z-10 w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 transition-transform duration-300"
@@ -133,7 +133,7 @@ const HowToPlay = () => {
                 src="/howto/node.svg"
                 className="connector-line w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 rotate-90 sm:rotate-0"
               />
-              <div className="step-content text-center sm:text-right max-w-lg">
+              <div className="step-content text-center sm:text-right max-w-md">
                 <h2 className="text-[#FFFB00] text-xl sm:text-2xl lg:text-3xl font-black drop-shadow-[0_0_20px_#FFFB00] mb-2 transition-all duration-300">
                   Listen & Guess the Song
                 </h2>
@@ -155,7 +155,7 @@ const HowToPlay = () => {
                 className="connector-line w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 rotate-90 sm:rotate-0"
               />
               <div className="step-icon relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 flex items-center justify-center">
-                <div className="absolute w-full h-full bg-white shadow-[0_0_30px_white] transition-all duration-300" />
+                <div className="absolute w-full h-full bg-white shadow-[0_0_30px_white] transition-all duration-300 hover:shadow-[0_0_40px_white]" />
                 <img
                   src="/howto/question.svg"
                   className="relative z-10 w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 transition-transform duration-300"
@@ -165,7 +165,7 @@ const HowToPlay = () => {
                 src="/howto/node.svg"
                 className="connector-line w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 rotate-90 sm:rotate-0"
               />
-              <div className="step-content text-center sm:text-left max-w-lg">
+              <div className="step-content text-center sm:text-left max-w-md">
                 <h2 className="text-[#FFFB00] text-xl sm:text-2xl lg:text-3xl font-black drop-shadow-[0_0_20px_#FFFB00] mb-2 transition-all duration-300">
                   See Hints & Earn Points
                 </h2>
