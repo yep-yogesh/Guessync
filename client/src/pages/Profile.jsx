@@ -79,7 +79,7 @@ const Profile = () => {
         {/* Moved CTA below the paragraph */}
         <button
           onClick={() => navigate("/landing")}
-          className="mt-5 sm:mt-6 bg-[#FFFB00] text-black px-4 sm:px-6 py-2 sm:py-3 rounded-md shadow-[0_0_14px_#FFFB00] hover:scale-105 transition pointer-events-auto"
+          className="mt-5 sm:mt-6 cursor-pointer bg-[#FFFB00] text-black px-4 sm:px-6 py-2 sm:py-3 rounded-md shadow-[0_0_14px_#FFFB00] hover:scale-105 transition pointer-events-auto"
         >
           Go Back Home
         </button>

@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faRightToBracket,
   faEarListen,
   faBolt,
   faTrophy,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -15,13 +15,13 @@ const HomePage = () => {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
   });
-  const [letters, setLetters] = useState(Array(8).fill(""));
-  const targetWord = "GUESSYNC";
+  const [letters, setLetters] = useState(Array(8).fill(''));
+  const targetWord = 'GUESSYNC';
   const [movingBlobs, setMovingBlobs] = useState([]);
   const containerRef = useRef(null);
 
   const getRandomChar = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
     return chars.charAt(Math.floor(Math.random() * chars.length));
   };
 
@@ -31,7 +31,7 @@ const HomePage = () => {
     const framesPerLetter = 15;
     let timeoutIds = [];
 
-    targetWord.split("").forEach((targetLetter, index) => {
+    targetWord.split('').forEach((targetLetter, index) => {
       timeoutIds.push(
         setTimeout(() => {
           for (let i = 0; i < framesPerLetter; i++) {
@@ -65,7 +65,7 @@ const HomePage = () => {
   useEffect(() => {
     const generateMovingBlobs = () => {
       const newBlobs = [];
-      const colors = ["#FFFB00"];
+      const colors = ['#FFFB00'];
       const numBlobs = Math.floor(Math.random() * 40) + 20;
 
       for (let i = 0; i < numBlobs; i++) {
@@ -120,24 +120,24 @@ const HomePage = () => {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const blobStyle = {
     top: `${mousePosition.y - 150}px`,
     left: `${mousePosition.x - 150}px`,
-    transform: "translate(-50%, -50%) scale(1)",
-    filter: "blur(120px)",
+    transform: 'translate(-50%, -50%) scale(1)',
+    filter: 'blur(120px)',
     opacity: 0.26,
     zIndex: 0,
-    position: "absolute",
-    width: "400px",
-    height: "400px",
-    borderRadius: "50%",
-    backgroundColor: "#FFFB00",
-    pointerEvents: "none",
-    animation: "morph 8s infinite alternate ease-in-out",
+    position: 'absolute',
+    width: '400px',
+    height: '400px',
+    borderRadius: '50%',
+    backgroundColor: '#FFFB00',
+    pointerEvents: 'none',
+    animation: 'morph 8s infinite alternate ease-in-out',
   };
 
   // Smooth redirect: if session token exists, go straight to /landing
@@ -149,7 +149,7 @@ const HomePage = () => {
 
   return (
     <div
-      className="relative w-full h-screen overflow-hidden bg-black text-white flex flex-col justify-center items-center px-4 sm:px-6 md:px-10"
+      className='relative w-full h-screen overflow-hidden bg-black text-white flex flex-col justify-center items-center px-4 sm:px-6 md:px-10'
       ref={containerRef}
     >
       <style>
@@ -172,13 +172,13 @@ const HomePage = () => {
       </style>
 
       {/* Mouse-follow blob */}
-      <div ref={blobRef} style={blobStyle} className="absolute" />
+      <div ref={blobRef} style={blobStyle} className='absolute' />
 
       {/* Background floating blobs */}
       {movingBlobs.map((blob) => (
         <div
           key={blob.id}
-          className="absolute rounded-full blur-3xl"
+          className='absolute rounded-full blur-3xl'
           style={{
             width: `${blob.size}px`,
             height: `${blob.size}px`,
@@ -191,22 +191,22 @@ const HomePage = () => {
       ))}
 
       {/* Main Content */}
-      <div className="z-10 text-center space-y-6 w-full">
+      <div className='z-10 text-center space-y-6 w-full'>
         {/* Logo + Title */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+        <div className='flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3'>
           <img
-            src="/logo.png"
-            alt="logo"
-            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mt-4 sm:mt-6"
+            src='/logo.png'
+            alt='logo'
+            className='w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 mt-4 sm:mt-6'
           />
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-silkscreen text-white">
+          <h1 className='text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-silkscreen text-white'>
             {letters.map((letter, index) => (
               <span
                 key={index}
                 className={`transition-all duration-100 ${
                   index >= 4
-                    ? "text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]"
-                    : ""
+                    ? 'text-[#FFFB00] drop-shadow-[0_0_5px_#FFFB00]'
+                    : ''
                 }`}
               >
                 {letter}
@@ -216,23 +216,24 @@ const HomePage = () => {
         </div>
 
         {/* Tagline */}
-        <p className="text-base sm:text-lg md:text-xl text-white max-w-md sm:max-w-lg md:max-w-2xl mx-auto leading-relaxed px-2">
+        <p className='text-base sm:text-lg md:text-xl text-white max-w-md sm:max-w-lg md:max-w-2xl mx-auto leading-relaxed px-2'>
           Fast-paced multiplayer music guessing game.
-          <br className="hidden sm:block" />
-          Play with friends, guess songs in seconds, and race to the top of the leaderboard.
+          <br className='hidden sm:block' />
+          Play with friends, guess songs in seconds, and race to the top of the
+          leaderboard.
         </p>
-        <div className="flex flex-wrap justify-center items-center gap-3 mt-4">
-          <div className="skill-box hover-trigger">
-            <span className="skill-name">Listen</span>
-            <FontAwesomeIcon icon={faEarListen} className="skill-icon" />
+        <div className='flex flex-wrap justify-center items-center gap-3 mt-4'>
+          <div className='skill-box hover-trigger'>
+            <span className='skill-name'>Listen</span>
+            <FontAwesomeIcon icon={faEarListen} className='skill-icon' />
           </div>
-          <div className="skill-box hover-trigger">
-            <span className="skill-name">Guess</span>
-            <FontAwesomeIcon icon={faBolt} className="skill-icon" />
+          <div className='skill-box hover-trigger'>
+            <span className='skill-name'>Guess</span>
+            <FontAwesomeIcon icon={faBolt} className='skill-icon' />
           </div>
-          <div className="skill-box hover-trigger">
-            <span className="skill-name">Win</span>
-            <FontAwesomeIcon icon={faTrophy} className="skill-icon" />
+          <div className='skill-box hover-trigger'>
+            <span className='skill-name'>Win</span>
+            <FontAwesomeIcon icon={faTrophy} className='skill-icon' />
           </div>
         </div>
 
@@ -304,12 +305,12 @@ const HomePage = () => {
         </style>
 
         {/* Login Button */}
-        <div className="flex justify-center items-center w-full mt-8 sm:mt-10">
+        <div className='flex justify-center items-center w-full mt-8 sm:mt-10'>
           <button
-            onClick={() => navigate("/login")}
-            className="glow-btn flex items-center gap-4 sm:gap-6 bg-[#FFFB00] text-black px-6 sm:px-8 md:px-10 py-2 sm:py-3 rounded-lg font-silkscreen text-lg sm:text-xl md:text-2xl"
+            onClick={() => navigate('/login')}
+            className='glow-btn cursor-pointer flex items-center gap-4 sm:gap-6 bg-[#FFFB00] text-black px-6 sm:px-8 md:px-10 py-2 sm:py-3 rounded-lg font-silkscreen text-lg sm:text-xl md:text-2xl'
           >
-            <FontAwesomeIcon icon={faRightToBracket} size="lg" />
+            <FontAwesomeIcon icon={faRightToBracket} size='lg' />
             Login
           </button>
         </div>

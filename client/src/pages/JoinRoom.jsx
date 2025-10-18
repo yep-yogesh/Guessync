@@ -279,36 +279,35 @@ export default function JoinRoom() {
             ))}
 
             <button
-              ref={(el) => (buttonRefs.current["0"] = el)}
-              onClick={() => handleDigit("0")}
-              className={`bg-gray-200 text-black text-xl py-5 px-0 border-4 border-black font-silkscreen shadow-[4px_4px_0_#000] hover:bg-gray-300 transition-all duration-150 ${getButtonActiveClass(
-                "0"
-              )} w-[80px] cursor-pointer`}
+              key={digit}
+              ref={(el) => (buttonRefs.current[digit] = el)}
+              onClick={() => handleDigit(digit.toString())}
+              className={`bg-gray-200 text-black text-xl font-silkscreen py-5 px-0 border-4 border-black cursor-pointer shadow-[4px_4px_0_#000] hover:bg-gray-300 transition-all duration-150 ${getButtonActiveClass(
+                digit
+              )} w-[80px]`}
             >
               0
             </button>
 
-            <button
-              ref={(el) => (buttonRefs.current["join"] = el)}
-              onClick={handleJoin}
-              className={`w-[177px] col-span-2 bg-black text-white text-lg py-0 font-silkscreen border-4 border-black shadow-[4px_4px_0_#000] hover:bg-gray-200 hover:text-black transition-all duration-150 ${getButtonActiveClass(
-                "join"
-              )} cursor-pointer`}
-            >
-              JOIN 🏠
-            </button>
-          </div>
+          <button
+            ref={(el) => (buttonRefs.current["0"] = el)}
+            onClick={() => handleDigit("0")}
+            className={`bg-gray-200 cursor-pointer text-black text-xl py-5 px-0 border-4 border-black font-silkscreen shadow-[4px_4px_0_#000] hover:bg-gray-300 transition-all duration-150 ${getButtonActiveClass(
+              "0"
+            )} w-[80px]`}
+          >
+            0
+          </button>
 
-          <p className="mt-4 text-black text-sm text-center">
-            No Code?{" "}
-            <span
-              onClick={() => navigate("/create-room")}
-              className="font-bold cursor-pointer relative group inline-block"
-            >
-              Create A New Room 🏡
-              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
-            </span>
-          </p>
+          <button
+            ref={(el) => (buttonRefs.current["join"] = el)}
+            onClick={handleJoin}
+            className={`w-[177px] cursor-pointer col-span-2 bg-black text-white text-lg py-0 font-silkscreen border-4 border-black shadow-[4px_4px_0_#000] hover:bg-gray-200 hover:cursor-pointer hover:text-black transition-all duration-150 ${getButtonActiveClass(
+              "join"
+            )}`}
+          >
+            JOIN 🏠
+          </button>
         </div>
       </main>
     </div>

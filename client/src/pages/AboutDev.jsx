@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import Navbar from "../components/common/Navbar";
+import { useEffect, useState } from 'react';
+import Navbar from '../components/common/Navbar';
 
 const AboutDev = () => {
-  const [displayText, setDisplayText] = useState("");
+  const [displayText, setDisplayText] = useState('');
   const fullText = "Hey, I'm Yogesh!👋";
 
   useEffect(() => {
@@ -20,23 +20,23 @@ const AboutDev = () => {
   }, []);
 
   const skills = [
-    { name: "Python", icon: "fab fa-python" },
-    { name: "JavaScript", icon: "fab fa-js" },
-    { name: "HTML5", icon: "fab fa-html5" },
-    { name: "CSS3", icon: "fab fa-css3-alt" },
-    { name: "React", icon: "fab fa-react" },
-    { name: "Node.js", icon: "fab fa-node-js" },
-    { name: "Express.js", icon: "fas fa-server" },
-    { name: "Git", icon: "fab fa-git-alt" },
-    { name: "MongoDB", icon: "fas fa-database" },
-    { name: "GitHub", icon: "fab fa-github" },
-    { name: "Firebase", icon: "fas fa-fire" },
-    { name: "Socket.io", icon: "fas fa-plug" },
-    { name: "Tailwind CSS", icon: "fab fa-css3" },
+    { name: 'Python', icon: 'fab fa-python' },
+    { name: 'JavaScript', icon: 'fab fa-js' },
+    { name: 'HTML5', icon: 'fab fa-html5' },
+    { name: 'CSS3', icon: 'fab fa-css3-alt' },
+    { name: 'React', icon: 'fab fa-react' },
+    { name: 'Node.js', icon: 'fab fa-node-js' },
+    { name: 'Express.js', icon: 'fas fa-server' },
+    { name: 'Git', icon: 'fab fa-git-alt' },
+    { name: 'MongoDB', icon: 'fas fa-database' },
+    { name: 'GitHub', icon: 'fab fa-github' },
+    { name: 'Firebase', icon: 'fas fa-fire' },
+    { name: 'Socket.io', icon: 'fas fa-plug' },
+    { name: 'Tailwind CSS', icon: 'fab fa-css3' },
   ];
 
   return (
-    <div className="h-screen bg-black text-white font-sans relative flex flex-col overflow-y-auto lg:overflow-hidden">
+    <div className='h-screen bg-black text-white font-sans relative flex flex-col overflow-y-auto lg:overflow-hidden'>
       <style>
         {`
           .social-icon {
@@ -44,7 +44,7 @@ const AboutDev = () => {
             font-size: 1.6rem;
             transition: color 0.3s, transform 0.3s;
           }
-          .social-icon:hover {
+          .social-icon:hover, .social-icon:focus {
             color: #FFFB00;
             text-shadow: 0 0 15px #FFFB00, 0 0 25px #FFFB00;
             transform: translateY(-3px);
@@ -107,40 +107,45 @@ const AboutDev = () => {
       <Navbar />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col md:flex-row justify-center items-center gap-1 sm:gap-5 lg:gap-14 px-4 sm:px-8 lg:px-12 pt-0 pb-2 sm:py-6">
+      <div className='flex-1 flex flex-col md:flex-row justify-center items-center gap-1 sm:gap-5 lg:gap-14 px-4 sm:px-8 lg:px-12 pt-0 pb-2 sm:py-6'>
         {/* Profile Image */}
-        <div className="relative flex justify-center items-center">
+        <div className='relative flex justify-center items-center'>
           <img
-            src="/pfp.png"
-            alt="Profile"
-            className="w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 lg:w-[450px] lg:h-[450px] object-contain rounded-full z-10"
+            src='/pfp.png'
+            alt='Profile'
+            className='w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 lg:w-[450px] lg:h-[450px] object-contain rounded-full z-10'
           />
         </div>
 
         {/* Info Card */}
-        <div className="relative bg-[#0A0A0A] rounded-2xl border-2 sm:border-4 border-[#FFFB00] shadow-lg px-5 sm:px-8 lg:px-10 py-6 sm:py-8 w-full max-w-[550px] lg:max-w-[700px] lg:min-h-[400px] flex flex-col justify-between">
-          <div className="text-left">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#FFFB00] mb-2 tracking-wide typing-cursor">
+        <div className='relative bg-[#0A0A0A] rounded-2xl border-2 sm:border-4 border-[#FFFB00] shadow-lg px-5 sm:px-8 lg:px-10 py-6 sm:py-8 w-full max-w-[550px] lg:max-w-[700px] lg:min-h-[400px] flex flex-col justify-between'>
+          <div className='text-left'>
+            <h1 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-[#FFFB00] mb-2 tracking-wide typing-cursor'>
               {displayText}
             </h1>
 
-            <h2 className="text-sm sm:text-base lg:text-lg mt-2 text-white mb-3 tracking-wider flex items-center gap-2">
-              <i className="fas fa-laptop-code text-[#FFFB00]"></i> Developer of{" "}
-              <span className="font-silkscreen">Gues<span className="text-white">sync</span></span>
+            <h2 className='text-sm sm:text-base lg:text-lg mt-2 text-white mb-3 tracking-wider flex items-center gap-2'>
+              <i className='fas fa-laptop-code text-[#FFFB00]'></i> Developer of{' '}
+              <span className='font-silkscreen'>
+                Gues<span className='text-white'>sync</span>
+              </span>
             </h2>
 
-            <p className="text-gray-300 text-sm sm:text-base lg:text-lg leading-relaxed">
-              I'm a full-stack developer who loves crafting playful, real-time web apps.
-              Guessync was built pixel-by-pixel to bring that retro arcade magic back to life,
-              blending music, fast guessing, and teamwork into pure fun. 🚀
+            <p className='text-gray-300 text-sm sm:text-base lg:text-lg leading-relaxed'>
+              I'm a full-stack developer who loves crafting playful, real-time
+              web apps. Guessync was built pixel-by-pixel to bring that retro
+              arcade magic back to life, blending music, fast guessing, and
+              teamwork into pure fun. 🚀
             </p>
 
-            <div className="mt-4">
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-3 tracking-wider">My Tech Stack</h3>
-              <div className="flex flex-wrap gap-2">
+            <div className='mt-4'>
+              <h3 className='text-lg sm:text-xl font-bold text-white mb-3 tracking-wider'>
+                My Tech Stack
+              </h3>
+              <div className='flex flex-wrap gap-2'>
                 {skills.map((skill, index) => (
-                  <div key={index} className="skill-box">
-                    <span className="skill-name">{skill.name}</span>
+                  <div key={index} className='skill-box'>
+                    <span className='skill-name'>{skill.name}</span>
                     <i className={`skill-icon ${skill.icon}`}></i>
                   </div>
                 ))}
@@ -149,29 +154,54 @@ const AboutDev = () => {
           </div>
 
           {/* Social + CTA */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 sm:gap-0 mt-6">
-            <div className="flex gap-5">
-              <a href="https://yogeshwaran-manivannan.netlify.app/" target="_blank" rel="noopener noreferrer" className="social-icon">
-                <i className="fas fa-globe"></i>
+          <div className='flex flex-col sm:flex-row justify-between items-center gap-6 sm:gap-0 mt-6'>
+            <div className='flex gap-5'>
+              <a
+                href='https://yogeshwaran-manivannan.netlify.app/'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='social-icon'
+              >
+                <i className='fas fa-globe'></i>
               </a>
-              <a href="https://github.com/yep-yogesh" target="_blank" rel="noopener noreferrer" className="social-icon">
-                <i className="fab fa-github"></i>
+              <a
+                href='https://github.com/yep-yogesh'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='social-icon'
+              >
+                <i className='fab fa-github'></i>
               </a>
-              <a href="https://www.linkedin.com/in/yogeshwaran-m-3b19452a9/" target="_blank" rel="noopener noreferrer" className="social-icon">
-                <i className="fab fa-linkedin"></i>
+              <a
+                href='https://www.linkedin.com/in/yogeshwaran-m-3b19452a9/'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='social-icon'
+              >
+                <i className='fab fa-linkedin'></i>
               </a>
-              <a href="https://www.instagram.com/wtfisyogesh" target="_blank" rel="noopener noreferrer" className="social-icon">
-                <i className="fab fa-instagram"></i>
+              <a
+                href='https://www.instagram.com/wtfisyogesh'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='social-icon'
+              >
+                <i className='fab fa-instagram'></i>
               </a>
-              <a href="https://leetcode.com/u/yogeshhhhhh/" target="_blank" rel="noopener noreferrer" className="social-icon">
-                <i className="fas fa-code"></i>
+              <a
+                href='https://leetcode.com/u/yogeshhhhhh/'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='social-icon'
+              >
+                <i className='fas fa-code'></i>
               </a>
             </div>
             <a
-              href="https://buymeacoffee.com/yogeshh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-[#FFFB00] text-black font-bold px-6 sm:px-8 py-2 rounded-lg hover:bg-black hover:text-[#FFFB00] border-2 border-transparent hover:border-[#FFFB00] transition-all duration-300 text-center"
+              href='https://buymeacoffee.com/yogeshh'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='w-full sm:w-auto bg-[#FFFB00] text-black font-bold px-6 sm:px-8 py-2 rounded-lg hover:bg-black hover:text-[#FFFB00] border-2 border-transparent hover:border-[#FFFB00] transition-all duration-300 text-center'
             >
               Tip the Dev
             </a>

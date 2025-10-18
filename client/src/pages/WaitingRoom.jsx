@@ -231,7 +231,7 @@ const WaitingRoom = () => {
         {isHost && (
           <button
             onClick={handleStartGame}
-            className="mt-2 sm:mt-3 lg:mt-4 py-2 sm:py-2 lg:py-3 rounded-md font-bold bg-[#FFFB00] text-black hover:brightness-110 shadow-[0_0_10px_#FFFB00] text-xs sm:text-sm lg:text-base"
+            className="mt-2 cursor-pointer sm:mt-3 lg:mt-4 py-2 sm:py-2 lg:py-3 rounded-md font-bold bg-[#FFFB00] text-black hover:brightness-110 shadow-yellow-400 shadow-md text-xs sm:text-sm lg:text-base"
           >
             START GAME
           </button>
