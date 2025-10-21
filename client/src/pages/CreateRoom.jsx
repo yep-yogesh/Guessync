@@ -29,6 +29,10 @@ const CreateRoom = () => {
   const [isCreating, setIsCreating] = useState(false);
   const navigate = useNavigate();
 
+  // allow free typing without immediately clobbering the user's keystrokes
+  const [playersInput, setPlayersInput] = useState(String(players));
+  const [roundsInput, setRoundsInput] = useState(String(rounds));
+
   useEffect(() => {
   const handleResize = () => {
     if (window.innerWidth >= 1024) {
@@ -332,6 +336,14 @@ const CreateRoom = () => {
     setMousePos({ x: e.clientX, y: e.clientY });
   };
 
+  // keep input strings in sync when numeric values change (e.g. +/- buttons)
+  useEffect(() => {
+    setPlayersInput(String(players));
+  }, [players]);
+  useEffect(() => {
+    setRoundsInput(String(rounds));
+  }, [rounds]);
+
   useEffect(() => {
     return () => clearAllTimers();
   }, []);
@@ -430,8 +442,8 @@ const CreateRoom = () => {
 
           {/* Players and Rounds Controls */}
           {[
-            { label: "NO. OF PLAYERS", value: players, set: setPlayers, max: 12 },
-            { label: "NO. OF ROUNDS", value: rounds, set: setRounds, max: 20 },
+            { id: "players", label: "NO. OF PLAYERS", value: players, set: setPlayers, max: 12 },
+            { id: "rounds",  label: "NO. OF ROUNDS",  value: rounds,  set: setRounds,  max: 20 },
           ].map((ctrl, i) => (
             <div key={i} className="flex flex-col sm:flex-row justify-center items-center mb-4 sm:mb-6 gap-3 sm:gap-8">
               <label className="w-full sm:w-[255px] font-silkscreen text-base sm:text-[1.275rem] whitespace-nowrap drop-shadow-[0_0_5px_#fff] text-center sm:text-left">
@@ -444,9 +456,38 @@ const CreateRoom = () => {
                 >
                   -
                 </button>
-                <span className="bg-white w-10 h-10 sm:w-[51px] sm:h-[51px] text-black rounded-lg font-silkscreen text-xl sm:text-[1.53rem] drop-shadow-[0_0_7px_#fff] flex justify-center items-center">
-                  {ctrl.value}
-                </span>
+
+                { /* editable input that allows multi-digit typing without immediate clobber */ }
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="\d*"
+                  value={ctrl.id === "players" ? playersInput : roundsInput}
+                  onChange={(e) => {
+                    // allow digits or empty string while typing
+                    const cleaned = e.target.value.replace(/\D/g, "");
+                    if (ctrl.id === "players") {
+                      setPlayersInput(cleaned);
+                    } else {
+                      setRoundsInput(cleaned);
+                    }
+                  }}
+                  onBlur={() => {
+                    // normalize on blur: parse, clamp to [1, max], update numeric state and input string
+                    const str = ctrl.id === "players" ? playersInput : roundsInput;
+                    let n = parseInt(str || "0", 10);
+                    if (Number.isNaN(n) || n < 1) n = 1;
+                    n = Math.min(ctrl.max, n);
+                    ctrl.set(n);
+                    if (ctrl.id === "players") setPlayersInput(String(n));
+                    else setRoundsInput(String(n));
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") e.currentTarget.blur();
+                  }}
+                  className="bg-white w-10 h-10 sm:w-[51px] sm:h-[51px] text-black rounded-lg font-silkscreen text-xl sm:text-[1.53rem] drop-shadow-[0_0_7px_#fff] flex justify-center items-center text-center"
+                />
+
                 <button
                   className="bg-[#FFFB00] w-10 h-10 sm:w-[51px] sm:h-[51px] font-silkscreen rounded-lg text-black text-xl sm:text-[1.53rem] drop-shadow-[0_0_7px_#FFFB00] cursor-pointer"
                   onClick={() => ctrl.set(Math.min(ctrl.max, ctrl.value + 1))}
