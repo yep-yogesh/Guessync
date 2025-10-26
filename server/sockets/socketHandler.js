@@ -1,4 +1,5 @@
 import Room from "../models/Room.js";
+import User from "../models/User.js";
 import Fuse from "fuse.js";
 import { getAIHint } from "../utils/getAIHint.js";
 
@@ -11,6 +12,15 @@ const fuzzyMatch = (actual, guess) => {
     threshold: 0.4,
   });
   return fuse.search(guess).length > 0 && fuse.search(guess)[0].score <= 0.4;
+};
+
+const getPlacementText = (place) => {
+  const j = place % 10;
+  const k = place % 100;
+  if (j === 1 && k !== 11) return `${place}ST`;
+  if (j === 2 && k !== 12) return `${place}ND`;
+  if (j === 3 && k !== 13) return `${place}RD`;
+  return `${place}TH`;
 };
 
 const socketHandler = (io) => {
@@ -139,6 +149,53 @@ const socketHandler = (io) => {
       }
     });
 
+    socket.on("update-songs-guessed", async ({ uid, count }) => {
+      try {
+        let user = await User.findOne({ uid });
+
+        if (!user) {
+          user = new User({ uid, name: "User", avatar: "/avatars/1.png" });
+        }
+
+        user.songsGuessed = (user.songsGuessed || 0) + Number(count);
+        await user.save();
+
+        socket.emit("songs-guessed-updated", {
+          message: "Songs guessed updated",
+          songsGuessed: user.songsGuessed
+        });
+
+        console.log(`Updated songs guessed for ${uid}: ${user.songsGuessed}`);
+      } catch (error) {
+        console.error("Error updating songs guessed:", error);
+      }
+    });
+
+    socket.on("update-guess-time", async ({ uid, guessTime }) => {
+      try {
+        let user = await User.findOne({ uid });
+
+        if (!user) {
+          user = new User({ uid, name: "User", avatar: "/avatars/1.png" });
+        }
+
+        const currentAvg = user.fastestGuess || 0;
+        const gamesCount = user.gamesPlayed || 1;
+        user.fastestGuess = (currentAvg * (gamesCount - 1) + guessTime) / gamesCount;
+
+        await user.save();
+
+        socket.emit("guess-time-updated", {
+          message: "Average guess time updated",
+          fastestGuess: user.fastestGuess
+        });
+
+        console.log(`Updated guess time for ${uid}: ${user.fastestGuess}s`);
+      } catch (error) {
+        console.error("Error updating guess time:", error);
+      }
+    });
+
     socket.on("disconnect", () => {
       console.log(`User disconnected: ${socket.id}`);
     });
@@ -219,8 +276,56 @@ const nextRound = async (roomCode, io) => {
 
     if (room.currentSongIndex >= room.playlist.length || room.currentRound > room.settings.rounds) {
       await room.save();
+      
+      // Game is over - save match results to database
+      const sortedPlayers = room.players.sort((a, b) => b.score - a.score);
+
+      // Save match results for each player
+      for (let index = 0; index < sortedPlayers.length; index++) {
+        const player = sortedPlayers[index];
+        const place = getPlacementText(index + 1);
+
+        try {
+          let user = await User.findOne({ uid: player.uid });
+
+          if (!user) {
+            user = new User({ 
+              uid: player.uid, 
+              name: player.name, 
+              avatar: player.avatar || "/avatars/1.png" 
+            });
+          }
+
+          user.matchHistory.push({
+            date: new Date(),
+            partyName: roomCode,
+            place: place,
+            points: player.score
+          });
+
+          user.gamesPlayed = (user.gamesPlayed || 0) + 1;
+          user.totalScore = (user.totalScore || 0) + player.score;
+
+          if (place === "1ST") {
+            user.wins = (user.wins || 0) + 1;
+            user.streak = (user.streak || 0) + 1;
+          } else {
+            user.streak = 0;
+          }
+
+          if (user.streak > (user.bestStreak || 0)) {
+            user.bestStreak = user.streak;
+          }
+
+          await user.save();
+          console.log(`Saved match result for ${player.name} (${place})`);
+        } catch (error) {
+          console.error(`Error saving match for ${player.name}:`, error);
+        }
+      }
+
       io.to(roomCode).emit("game-over", {
-        leaderboard: room.players.sort((a, b) => b.score - a.score),
+        leaderboard: sortedPlayers,
       });
       return;
     }

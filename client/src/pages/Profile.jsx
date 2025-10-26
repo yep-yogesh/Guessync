@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trophy, Gamepad2, Music, Flame, Clock, Copy, Check, History } from "lucide-react";
+import { Trophy, Gamepad2, Music, Flame, Clock, Copy, Check, History, LogOut } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import Navbar from "../components/common/Navbar";
+import { auth } from "../config/firebase";
+import { signOut } from "firebase/auth";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -13,12 +15,24 @@ const Profile = () => {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(null);
 
-  // Debug logging
-  useEffect(() => {
-    console.log("Auth Context:", authContext);
-  }, [authContext]);
+  const handleLogout = async () => {
+    try {
+      // Sign out from Firebase
+      await signOut(auth);
+      
+      // Clear localStorage
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      
+      console.log("✅ User logged out successfully");
+      
+      // Redirect to login page
+      navigate('/login');
+    } catch (error) {
+      console.error("❌ Logout failed:", error);
+    }
+  };
 
-  // Generate user tag based on username
   const generateUserTag = (name) => {
     if (!name) return "#GUEST";
     const hash = name.split('').reduce((acc, char) => {
@@ -31,11 +45,9 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        console.log("Starting profile fetch...");
         setLoading(true);
         setError(null);
 
-        // Check if AuthContext is available
         if (!authContext) {
           console.error("AuthContext not available");
           setError("Authentication context not available");
@@ -45,9 +57,7 @@ const Profile = () => {
 
         const { user, isGuest, guestName, guestAvatar } = authContext;
 
-        // If guest user, show mock data
         if (isGuest && guestName) {
-          console.log("Guest user detected:", guestName);
           setProfileData({
             name: guestName,
             avatar: guestAvatar || "/avatars/1.png",
@@ -65,53 +75,39 @@ const Profile = () => {
           return;
         }
 
-        // Check localStorage for user data
         const storedUser = localStorage.getItem('user');
         const storedToken = localStorage.getItem('token');
-        
-        console.log("Stored user:", storedUser);
-        console.log("Has token:", !!storedToken);
 
         let currentUser = user;
         if (!currentUser && storedUser) {
           try {
             currentUser = JSON.parse(storedUser);
-            console.log("Parsed user from localStorage:", currentUser);
           } catch (e) {
             console.error("Error parsing stored user:", e);
           }
         }
 
-        // If authenticated user exists
         if (currentUser && currentUser.uid) {
-          console.log("Authenticated user found:", currentUser.uid);
-          
-          // Try to fetch from backend
           const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-          console.log("API URL:", apiUrl);
 
           try {
-            const response = await fetch(`${apiUrl}/api/users/profile/${currentUser.uid}`, {
+            const response = await fetch(`${apiUrl}/api/user/profile/${currentUser.uid}`, {
               headers: {
                 'Authorization': `Bearer ${storedToken}`,
                 'Content-Type': 'application/json'
               }
             });
-            
-            console.log("API Response status:", response.status);
 
             if (response.ok) {
               const data = await response.json();
               const userData = data.user;
-              console.log("Fetched user data:", userData);
               
-              // Calculate average guess time
-              const avgTime = userData.fastestGuess ? userData.fastestGuess : 0;
+              const avgTime = userData.fastestGuess ? userData.fastestGuess.toFixed(1) : 0;
               
               setProfileData({
-                name: userData.name,
+                name: userData.name || currentUser.name,
                 avatar: userData.avatar || currentUser.avatar || "/avatars/1.png",
-                userTag: generateUserTag(userData.name),
+                userTag: generateUserTag(userData.name || currentUser.name),
                 stats: {
                   wins: userData.wins || 0,
                   gamesPlayed: userData.gamesPlayed || 0,
@@ -119,15 +115,13 @@ const Profile = () => {
                   streak: userData.streak || 0,
                   averageGuessTime: avgTime
                 },
-                matchHistory: userData.matchHistory || []
+                matchHistory: (userData.matchHistory || []).sort((a, b) => new Date(b.date) - new Date(a.date))
               });
             } else {
-              console.log("API returned non-OK status, using local data");
-              // Use local data as fallback
               setProfileData({
                 name: currentUser.name || "User",
                 avatar: currentUser.avatar || "/avatars/1.png",
-                userTag: generateUserTag(currentUser.name),
+                userTag: generateUserTag(currentUser.name || "User"),
                 stats: {
                   wins: 0,
                   gamesPlayed: 0,
@@ -140,11 +134,10 @@ const Profile = () => {
             }
           } catch (apiError) {
             console.error("API call failed:", apiError);
-            // Use local data as fallback
             setProfileData({
               name: currentUser.name || "User",
               avatar: currentUser.avatar || "/avatars/1.png",
-              userTag: generateUserTag(currentUser.name),
+              userTag: generateUserTag(currentUser.name || "User"),
               stats: {
                 wins: 0,
                 gamesPlayed: 0,
@@ -158,8 +151,6 @@ const Profile = () => {
           
           setLoading(false);
         } else {
-          // No user logged in
-          console.log("No user found, redirecting to login");
           setTimeout(() => {
             navigate("/login");
           }, 1000);
@@ -245,14 +236,11 @@ const Profile = () => {
       <Navbar />
       
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* PROFILE Header - Large title */}
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-8 tracking-wider">
           PROFILE
         </h1>
 
-        {/* User Header Section */}
         <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6">
-          {/* Left: Avatar + Name + Tag */}
           <div className="flex items-center gap-6">
             <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden border-4 border-[#FFFB00] shadow-[0_0_20px_#FFFB00]">
               <img 
@@ -282,25 +270,30 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Right: Stats Cards */}
-          <div className="flex flex-wrap gap-4 justify-center md:justify-end">
+          <div className="flex flex-wrap gap-4 justify-center md:justify-end items-center">
             <StatCard icon={<Trophy />} value={stats.wins} label="WINS" />
             <StatCard icon={<Gamepad2 />} value={stats.gamesPlayed} label="GAMES" />
+            
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="font-montserrat">Logout</span>
+            </button>
           </div>
         </div>
 
-        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Match History (takes 2 columns on large screens) */}
           <div className="lg:col-span-2">
             <div className="bg-[#FFFB00] rounded-xl overflow-hidden">
-              {/* Header */}
               <div className="bg-[#FFFB00] px-6 py-4 flex items-center gap-3 border-b-4 border-black">
                 <History className="w-6 h-6 text-black" />
                 <h3 className="text-xl font-bold text-black">Match History</h3>
               </div>
 
-              {/* Table */}
               <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
                 {matchHistory.length === 0 ? (
                   <div className="text-center py-12 text-black font-montserrat">
@@ -342,7 +335,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Right: Additional Stats */}
           <div className="space-y-4">
             <StatCard 
               icon={<Music />} 
@@ -369,7 +361,6 @@ const Profile = () => {
   );
 };
 
-// Reusable Stat Card Component
 const StatCard = ({ icon, value, label, large = false }) => {
   return (
     <div className={`bg-[#FFFB00] rounded-xl p-4 flex items-center gap-4 border-2 border-black shadow-lg hover:shadow-xl transition-shadow ${

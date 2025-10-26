@@ -138,8 +138,9 @@ export default function JoinRoom() {
     };
 
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const doFetch = async (tok) =>
-        fetch("https://guessync.onrender.com/api/room/join", {
+        fetch(`${apiUrl}/api/room/join`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
