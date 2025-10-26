@@ -36,6 +36,7 @@ const GameRoom = () => {
   const [currentSongDetails, setCurrentSongDetails] = useState(null);
   const [showPlayButton, setShowPlayButton] = useState(false);
   const [isFirstRound, setIsFirstRound] = useState(true);
+  const [correctGuessesCount, setCorrectGuessesCount] = useState(0);
 
   const audioRef = useRef(null);
   const blobCanvasRef = useRef(null);
@@ -282,6 +283,7 @@ const GameRoom = () => {
 
       if (isCurrentUser) {
         setCorrectGuess(true);
+        setCorrectGuessesCount((prev) => prev + 1);
         setHintRevealed((prev) => ({
           ...prev,
           movie: true,
@@ -338,6 +340,14 @@ const GameRoom = () => {
     socket.on("game-over", ({ leaderboard }) => {
       setGameOver(true);
       setLeaderboard(leaderboard);
+      
+      // Update songs guessed count
+      if (user && user.uid) {
+        socket.emit("update-songs-guessed", {
+          uid: user.uid,
+          count: correctGuessesCount
+        });
+      }
     });
 
     socket.on("loading-next-round", () => {
@@ -377,7 +387,7 @@ const GameRoom = () => {
       socket.emit("leave-room", { roomCode, user });
       cleanupBlobCanvas();
     };
-  }, [roomCode, user, isFirstRound]);
+  }, [roomCode, user, isFirstRound, correctGuessesCount]);
 
   useEffect(() => {
     let interval;
@@ -644,9 +654,6 @@ if (gameOver) {
     <img src="/film.png" alt="Movie" className="w-4 h-4" />
     <span>
       {roundEnded ? `${song.song}` : "Hidden"}
-      {/* {roundEnded && (
-        <span className="text-white italic">{song.movie}</span>
-      )} */}
     </span>
   </div>
 </div>
@@ -685,9 +692,9 @@ if (gameOver) {
 <span>
   {hintRevealed.movie
     ? song.movie
-        .replace(/\s*[\--]?\s*\(.*?(original motion picture soundtrack|ost|from.*?)\)/gi, "") // remove entire (Original Motion Picture Soundtrack)
-        .replace(/\s*[\--]?\s*(original motion picture soundtrack|ost|from.*)/gi, "") // fallback for non-parentheses versions
-        .replace(/\s*\)+$/, "") // remove leftover closing parenthesis
+        .replace(/\s*[\--]?\s*\(.*?(original motion picture soundtrack|ost|from.*?)\)/gi, "")
+        .replace(/\s*[\--]?\s*(original motion picture soundtrack|ost|from.*)/gi, "")
+        .replace(/\s*\)+$/, "")
         .trim()
     : "Hidden"}
 </span>

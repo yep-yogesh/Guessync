@@ -36,15 +36,28 @@ const Signup = () => {
       await updateProfile(result.user, { displayName: name });
       const token = await result.user.getIdToken();
 
+      const userToSave = {
+        name,
+        uid: result.user.uid,
+        avatar: selectedAvatar,
+      };
+
       localStorage.setItem("token", token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name,
-          uid: result.user.uid,
-          avatar: selectedAvatar,
-        })
-      );
+      localStorage.setItem("user", JSON.stringify(userToSave));
+
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user/sync`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(userToSave)
+        });
+        console.log("✅ User synced to backend");
+      } catch (err) {
+        console.error("Failed to sync user to backend:", err);
+      }
 
       window.location.href = "/landing";
     } catch (err) {
@@ -75,15 +88,28 @@ const Signup = () => {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
 
+      const userToSave = {
+        name: result.user.displayName || "Google User",
+        uid: result.user.uid,
+        avatar: selectedAvatar,
+      };
+
       localStorage.setItem("token", token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: result.user.displayName || "Google User",
-          uid: result.user.uid,
-          avatar: selectedAvatar,
-        })
-      );
+      localStorage.setItem("user", JSON.stringify(userToSave));
+
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user/sync`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(userToSave)
+        });
+        console.log("✅ User synced to backend");
+      } catch (err) {
+        console.error("Failed to sync user to backend:", err);
+      }
 
       window.location.href = "/landing";
     } catch (err) {
@@ -99,13 +125,11 @@ const Signup = () => {
     <div className="min-h-screen bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex flex-col lg:flex-row items-center justify-center flex-1 gap-10 px-6 py-10">
-        {/* Signup Form */}
         <div className="bg-[#FFFB00] p-6 sm:p-8 rounded-xl shadow-xl text-black w-full sm:w-[320px] md:w-[380px] lg:w-[420px]">
           <h1 className="text-2xl sm:text-3xl font-black text-center mb-6 font-montserrat">
             Sign-Up
           </h1>
 
-          {/* Name */}
           <label className="block text-xs sm:text-sm font-silkscreen mb-1">
             ENTER YOUR NAME
           </label>
@@ -124,7 +148,6 @@ const Signup = () => {
             </p>
           )}
 
-          {/* Email */}
           <label className="block text-xs sm:text-sm font-silkscreen mb-1">
             ENTER YOUR EMAIL ADDRESS
           </label>
@@ -143,7 +166,6 @@ const Signup = () => {
             </p>
           )}
 
-          {/* Password */}
           <label className="block text-xs sm:text-sm font-silkscreen mb-1">
             ENTER YOUR PASSWORD
           </label>
@@ -197,7 +219,6 @@ const Signup = () => {
           </div>
         </div>
 
-        {/* Avatar Picker */}
         <div className="flex flex-col items-center gap-4 w-full max-w-xl">
           <div
             className={`bg-[#FFFB00]/35 text-[#FFFB00] whitespace-nowrap w-fit px-6 sm:px-10 py-2 rounded border-2 border-[#FFFB00] shadow-[0_0_12px_#FFFB00] font-silkscreen text-base sm:text-lg text-center ${

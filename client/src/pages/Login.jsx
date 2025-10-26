@@ -17,6 +17,7 @@ const Login = () => {
     const newErrors = {};
     if (!email.trim()) newErrors.email = "Enter your email";
     if (!password.trim()) newErrors.password = "Enter your password";
+    if (!selectedAvatar) newErrors.avatar = "Choose an avatar before continuing";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -28,15 +29,28 @@ const Login = () => {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const token = await result.user.getIdToken();
 
+      const userToSave = {
+        name: result.user.displayName || email.split('@')[0],
+        uid: result.user.uid,
+        avatar: selectedAvatar,
+      };
+
       localStorage.setItem("token", token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: result.user.displayName || email,
-          uid: result.user.uid,
-          avatar: result.user.photoURL || "",
-        })
-      );
+      localStorage.setItem("user", JSON.stringify(userToSave));
+
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user/sync`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(userToSave)
+        });
+        console.log("✅ User synced to backend");
+      } catch (err) {
+        console.error("Failed to sync user to backend:", err);
+      }
 
       window.location.href = "/landing";
     } catch (err) {
@@ -71,20 +85,29 @@ const Login = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
-      const existingUser = JSON.parse(localStorage.getItem("user"));
+
+      const userToSave = {
+        name: result.user.displayName || "Google User",
+        uid: result.user.uid,
+        avatar: selectedAvatar,
+      };
 
       localStorage.setItem("token", token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: result.user.displayName || "Google User",
-          uid: result.user.uid,
-          avatar:
-            existingUser?.uid === result.user.uid
-              ? existingUser.avatar
-              : selectedAvatar,
-        })
-      );
+      localStorage.setItem("user", JSON.stringify(userToSave));
+
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user/sync`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(userToSave)
+        });
+        console.log("✅ User synced to backend");
+      } catch (err) {
+        console.error("Failed to sync user to backend:", err);
+      }
 
       window.location.href = "/landing";
     } catch (err) {
@@ -96,7 +119,6 @@ const Login = () => {
     <div className="min-h-screen bg-black text-white flex flex-col">
       <Navbar />
       <div className="flex flex-col lg:flex-row items-center justify-center flex-1 gap-10 px-6 py-10">
-        {/* Login Form */}
         <div className="bg-[#FFFB00] p-6 sm:p-8 rounded-xl shadow-xl text-black w-full sm:w-[320px] md:w-[380px] lg:w-[420px]">
           <h1 className="text-2xl sm:text-3xl font-black text-center mb-6 font-montserrat">
             Login
@@ -162,12 +184,11 @@ const Login = () => {
               className="flex-1 flex justify-center items-center gap-3 bg-white text-black px-4 py-3 rounded text-sm sm:text-base font-silkscreen border-2 border-transparent hover:border-black transition-all duration-200"
             >
               <img src={googleIcon} alt="G" className="w-5 h-5" />
-              Sign Up With Google
+              Sign In With Google
             </button>
           </div>
         </div>
 
-        {/* Avatar Picker */}
         <div className="flex flex-col items-center gap-4 w-full max-w-xl">
           <div
             className={`bg-[#FFFB00]/35 text-[#FFFB00] whitespace-nowrap w-fit px-6 sm:px-10 py-2 rounded border-2 border-[#FFFB00] shadow-[0_0_12px_#FFFB00] font-silkscreen text-base sm:text-lg text-center ${

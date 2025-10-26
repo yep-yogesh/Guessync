@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AuthProvider from "./context/AuthContext";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -13,9 +14,11 @@ import AboutDev from './pages/AboutDev';
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <InnerApp /> 
     </Router>
+    </AuthProvider>
   );
 }
 
